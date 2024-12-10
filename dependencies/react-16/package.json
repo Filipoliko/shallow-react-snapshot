@@ -1,0 +1,10 @@
+{
+    "name": "react-16",
+    "private": true,
+    "devDependencies": {
+        "@testing-library/react": "12.1.5",
+        "react": "16.14.0",
+        "react-dom": "16.14.0",
+        "react-is": "16.13.1"
+    }
+}

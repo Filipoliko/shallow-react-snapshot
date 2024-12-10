@@ -1,0 +1,13 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Render 1`] = `
+<div>
+  <MyNestedComponent
+    data-testid="nested"
+  >
+    <span>
+      Text
+    </span>
+  </MyNestedComponent>
+</div>
+`;

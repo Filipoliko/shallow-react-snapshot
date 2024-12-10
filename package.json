@@ -1,0 +1,41 @@
+{
+  "name": "shallow-react-snapshot",
+  "version": "0.0.0",
+  "workspaces": [
+    "dependencies/*"
+  ],
+  "keywords": [
+    "shallow",
+    "react",
+    "snapshot",
+    "testing",
+    "jest"
+  ],
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "scripts": {
+    "build": "tsc",
+    "playground": "./scripts/playground.sh",
+    "test": "jest",
+    "preversion": "npm run build",
+    "postversion": "git push && git push --tags && npm publish"
+  },
+  "author": "Filip Šátek <satek.filip@gmail.com>",
+  "license": "MIT",
+  "description": "",
+  "devDependencies": {
+    "@testing-library/dom": "^10.4.0",
+    "@types/jest": "^29.5.14",
+    "@types/react": "^19.0.1",
+    "@types/react-dom": "^19.0.1",
+    "@types/react-is": "^19.0.0",
+    "http-server": "^14.1.1",
+    "jest": "^29.7.0",
+    "jest-environment-jsdom": "^29.7.0",
+    "ts-jest": "^29.2.5",
+    "typescript": "^5.7.2"
+  },
+  "peerDependencies": {
+    "react-is": "*"
+  }
+}

@@ -1,0 +1,121 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Functional component render direct StrictMode wrapper around react component with a single child element 1`] = `
+<StrictMode>
+  <MyComponent>
+    <h1>
+      Hello World One
+    </h1>
+  </MyComponent>
+</StrictMode>
+`;
+
+exports[`Functional component render direct forwarded wrapper around react component with a single child element 1`] = `
+<ForwardRef(MyForwardedComponent)>
+  <h1>
+    Hello World One
+  </h1>
+</ForwardRef(MyForwardedComponent)>
+`;
+
+exports[`Functional component render direct memoized wrapper around react component with a single child element 1`] = `
+<MyComponent>
+  <h1>
+    Hello World One
+  </h1>
+</MyComponent>
+`;
+
+exports[`Functional component render direct profiler wrapper around react component with a single child element 1`] = `
+<Profiler
+  id="profiler"
+  onRender={[Function]}
+>
+  <MyComponent>
+    <h1>
+      Hello World One
+    </h1>
+  </MyComponent>
+</Profiler>
+`;
+
+exports[`Functional component render direct wrapper around react component with a single child element 1`] = `
+<MyComponent>
+  <h1>
+    Hello World One
+  </h1>
+</MyComponent>
+`;
+
+exports[`Functional component render direct wrapper around react component with a single child element and children on second position 1`] = `
+<MyComponentWithChildrenOnSecondPosition>
+  <h1>
+    Hello World One
+  </h1>
+</MyComponentWithChildrenOnSecondPosition>
+`;
+
+exports[`Functional component render direct wrapper around react component with a single child element and props 1`] = `
+<MyComponent
+  something="beautiful"
+>
+  <h1>
+    Hello World One
+  </h1>
+</MyComponent>
+`;
+
+exports[`Functional component render direct wrapper around react component with multiple deep child elements 1`] = `
+<MyComponent>
+  <MyComponent>
+    <h1>
+      Hello World One
+    </h1>
+  </MyComponent>
+</MyComponent>
+`;
+
+exports[`Functional component render direct wrapper around react component with no child element 1`] = `<MyComponent />`;
+
+exports[`Functional component render fragment wrapper around react component with single text child 1`] = `
+<MyComponent>
+  <Fragment>
+    Some random text
+  </Fragment>
+</MyComponent>
+`;
+
+exports[`Functional component render react component with portal 1`] = `
+<MyComponent>
+  <h1>
+    Hello World One
+  </h1>
+</MyComponent>
+`;
+
+exports[`Functional component render wrapper around react component with multiple children 1`] = `
+<div>
+  <MyComponent>
+    <h2>
+      Hello World Two
+    </h2>
+    Some random text
+  </MyComponent>
+</div>
+`;
+
+exports[`Functional component render wrapper around react component with single number child 1`] = `
+<div>
+  <MyComponent>
+    1234
+  </MyComponent>
+</div>
+`;
+
+exports[`Functional component render wrapper around react component with single text child 1`] = `
+<div>
+  <MyComponent>
+    Some random text
+  </MyComponent>
+</div>
+`;
