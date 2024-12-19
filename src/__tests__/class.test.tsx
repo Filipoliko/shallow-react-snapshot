@@ -10,6 +10,13 @@ class MyComponent extends Component<{ children?: React.ReactNode, [key: string]:
     }
 }
 
+class WrapperAroundMyComponent extends Component<{ children?: React.ReactNode, [key: string]: any }> {
+  render() {
+      const { children, ...props } = this.props;
+      return <MyComponent {...props}>{children || null}</MyComponent>;
+  }
+}
+
 class MyComponentWithChildrenOnSecondPosition extends Component<{ children?: React.ReactNode }> {
   render() {
       const { children } = this.props;
@@ -84,6 +91,18 @@ const testCases = [
     },
   },
   {
+    description: 'direct wrapper around react component that wraps another react component',
+    App: class App extends Component {
+      render() {
+        return (
+          <WrapperAroundMyComponent>
+            <h1>Hello World One</h1>
+          </WrapperAroundMyComponent>
+        );
+      }
+    },
+  },
+  {
     description: 'wrapper around react component with multiple children',
     App: class App extends Component {
       render() {
@@ -151,6 +170,18 @@ const testCases = [
         );
       }
     },
+  },
+  {
+    description: 'wrapped in React.memo',
+    App: React.memo(class App extends Component {
+      render() {
+        return (
+          <MyComponent>
+            Hello World One
+          </MyComponent>
+        );
+      }
+    }),
   },
   {
     description: 'direct profiler wrapper around react component with a single child element',

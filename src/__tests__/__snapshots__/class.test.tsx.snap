@@ -31,6 +31,14 @@ exports[`Class component render direct profiler wrapper around react component w
 </Profiler>
 `;
 
+exports[`Class component render direct wrapper around react component that wraps another react component 1`] = `
+<WrapperAroundMyComponent>
+  <h1>
+    Hello World One
+  </h1>
+</WrapperAroundMyComponent>
+`;
+
 exports[`Class component render direct wrapper around react component with a single child element 1`] = `
 <MyComponent>
   <h1>
@@ -82,6 +90,12 @@ exports[`Class component render react component with portal 1`] = `
   <h1>
     Hello World One
   </h1>
+</MyComponent>
+`;
+
+exports[`Class component render wrapped in React.memo 1`] = `
+<MyComponent>
+  Hello World One
 </MyComponent>
 `;
 

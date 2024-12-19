@@ -81,7 +81,7 @@ function transformFilterToReactComponents(filter: Filter) {
     ['whitelist', 'blacklist'].forEach((key) => {
         if (filter[key as keyof Filter]) {
             filter[key as keyof Filter] = filter[key as keyof Filter]!.map((component: any) => {
-                if (component.$$typeof === Memo) {
+                if (Memo && component.$$typeof === Memo) {
                     return component.type;
                 }
 
@@ -219,32 +219,32 @@ function getType({ type, elementType }: any): string {
     }
 
     // React.memo
-    if (type.$$typeof === Memo) {
+    if (Memo && type.$$typeof === Memo) {
         return `Memo(${getType(type)})`;
     }
     
     // React.forwardRef
-    if (type.$$typeof === ForwardRef) {
+    if (ForwardRef && type.$$typeof === ForwardRef) {
         return `ForwardRef(${getType({ type: type.render })})`;
     }
 
     // React.Fragment
-    if (type === Fragment) {
+    if (Fragment && type === Fragment) {
         return 'Fragment';
     }
 
     // React.Profiler
-    if (type === Profiler) {
+    if (Profiler && type === Profiler) {
         return 'Profiler';
     }
 
     // React.StrictMode
-    if (type === StrictMode) {
+    if (StrictMode && type === StrictMode) {
         return 'StrictMode';
     }
 
     // React.Suspense
-    if (type === Suspense) {
+    if (Suspense && type === Suspense) {
         return 'Suspense';
     }
 
