@@ -201,7 +201,7 @@ function renderReactComponentWithChildrenAndSiblings(reactComponent: any, filter
  * Inspired by https://github.com/enzymejs/enzyme/blob/67b9ebeb3cc66ec1b3d43055c6463a595387fb14/packages/enzyme-adapter-react-16/src/ReactSixteenAdapter.js#L888
  */
 function getType({ type, elementType }: any): string {
-    type = type || elementType;
+    type = elementType || type;
 
     // Native elements
     if (typeof type === 'string') {

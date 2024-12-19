@@ -19,11 +19,11 @@ exports[`Functional component render direct forwarded wrapper around react compo
 `;
 
 exports[`Functional component render direct memoized wrapper around react component with a single child element 1`] = `
-<MyComponent>
+<Memo(MyComponent)>
   <h1>
     Hello World One
   </h1>
-</MyComponent>
+</Memo(MyComponent)>
 `;
 
 exports[`Functional component render direct profiler wrapper around react component with a single child element 1`] = `
