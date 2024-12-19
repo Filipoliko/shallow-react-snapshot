@@ -40,8 +40,9 @@ type Filter = {
  * reactComponent.memoizedProps -> props
  */
 
-export function shallow(rootElement: HTMLElement, filter: Filter): ReactTestObject | string | null {
+export function shallow(rootElement: HTMLElement | null, filter: Filter): ReactTestObject | string | null {
     validateFilter(filter);
+    transformFilterToReactComponents(filter);
 
     if (rootElement === null) {
         return null;
@@ -76,11 +77,36 @@ function validateFilter(filter: Filter) {
     }
 }
 
+function transformFilterToReactComponents(filter: Filter) {
+    ['whitelist', 'blacklist'].forEach((key) => {
+        if (filter[key as keyof Filter]) {
+            filter[key as keyof Filter] = filter[key as keyof Filter]!.map((component: any) => {
+                if (component.$$typeof === Memo) {
+                    return component.type;
+                }
+
+                return component;
+            });
+        }
+    });
+}
+
 function getRootReactComponent(fiberOrInternalInstance: any, filter: Filter): any {
     let current = fiberOrInternalInstance;
 
+    // Find first component related to our filter
+    if (!isComponentOwnerMatchingFilterRules(current, filter)) {
+        while (current.return && !isComponentOwnerMatchingFilterRules(current.return, filter)) {
+            current = current.return;
+        }
+    }
+
     while (current.return && isComponentOwnerMatchingFilterRules(current.return, filter)) {
         current = current.return;
+    }
+
+    if (!isComponentOwnerMatchingFilterRules(current, filter)) {
+        throw new Error('Shallow: Unable to find root component. This should not happen. Please, report this issue.');
     }
 
     return current;

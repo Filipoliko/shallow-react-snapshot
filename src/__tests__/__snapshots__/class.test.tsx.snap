@@ -11,13 +11,11 @@ exports[`Class component render direct StrictMode wrapper around react component
 `;
 
 exports[`Class component render direct memoized wrapper around react component with a single child element 1`] = `
-<div
-  id="MyComponent"
->
+<Memo(MyComponent)>
   <h1>
     Hello World One
   </h1>
-</div>
+</Memo(MyComponent)>
 `;
 
 exports[`Class component render direct profiler wrapper around react component with a single child element 1`] = `

@@ -39,6 +39,14 @@ exports[`Functional component render direct profiler wrapper around react compon
 </Profiler>
 `;
 
+exports[`Functional component render direct wrapper around react component that wraps another react component 1`] = `
+<WrapperAroundMyComponent>
+  <h1>
+    Hello World One
+  </h1>
+</WrapperAroundMyComponent>
+`;
+
 exports[`Functional component render direct wrapper around react component with a single child element 1`] = `
 <MyComponent>
   <h1>
@@ -90,6 +98,12 @@ exports[`Functional component render react component with portal 1`] = `
   <h1>
     Hello World One
   </h1>
+</MyComponent>
+`;
+
+exports[`Functional component render wrapped in React.memo 1`] = `
+<MyComponent>
+  Hello World One
 </MyComponent>
 `;
 

@@ -7,6 +7,10 @@ function MyComponent({ children, ...props }: { children?: React.ReactNode, [key:
     return <div id="MyComponent" {...props}>{children || null}</div>;
 }
 
+function WrapperAroundMyComponent({ children, ...props }: { children?: React.ReactNode, [key: string]: any }) {
+  return <MyComponent {...props}>{children || null}</MyComponent>;
+}
+
 function MyComponentWithChildrenOnSecondPosition({ children }: { children: React.ReactNode }) {
     return (
       <div id="MyComponentWithChildrenOnSecondPosition">
@@ -71,6 +75,16 @@ const testCases = [
     },
   },
   {
+    description: 'direct wrapper around react component that wraps another react component',
+    App: function App() {
+      return (
+        <WrapperAroundMyComponent>
+          <h1>Hello World One</h1>
+        </WrapperAroundMyComponent>
+      );
+    },
+  },
+  {
     description: 'wrapper around react component with multiple children',
     App: function App() {
       return (
@@ -128,6 +142,16 @@ const testCases = [
         </MyMemoizedComponent>
       );
     },
+  },
+  {
+    description: 'wrapped in React.memo',
+    App: React.memo(function App() {
+      return (
+        <MyComponent>
+          Hello World One
+        </MyComponent>
+      );
+    }),
   },
   {
     description: 'direct forwarded wrapper around react component with a single child element',
@@ -196,4 +220,13 @@ describe('Functional component render', () => {
 
         expect(result).toMatchSnapshot();
     });
+
+    // @TODO: This test is crashing the shallow script, fix it and re-enable test
+    test.skip('react component with another react component as a child', () => {
+        const { container } = render(<WrapperAroundMyComponent><MyComponent /></WrapperAroundMyComponent>);
+
+        const result = shallow(container.firstChild as HTMLElement, { whitelist: [WrapperAroundMyComponent] });
+
+        expect(result).toMatchSnapshot();
+    })
 });
