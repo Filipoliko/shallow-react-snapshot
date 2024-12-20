@@ -14,9 +14,7 @@ function generateConfigs() {
       displayName: dependency,
       moduleNameMapper: generateModuleNameMapper(dependency),
       testEnvironment: "jsdom",
-      transform: {
-        "^.+.tsx?$": ["ts-jest",{}],
-      },
+      preset: "ts-jest",
     };
   });
 }
