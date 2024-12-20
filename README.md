@@ -27,37 +27,37 @@ This library officially supports React 16 and newer.
 ## Usage
 
 ```javascript
-import { shallow } from 'shallow-react-snapshot';
-import { render } from '@testing-library/react';
+import { shallow } from "shallow-react-snapshot";
+import { render } from "@testing-library/react";
 
 function MyComponent() {
-    return (
-        <div>
-            <MyNestedComponent data-testid="nested">
-                <span>Text</span>
-            </MyNestedComponent>
-        </div>
-    );
+  return (
+    <div>
+      <MyNestedComponent data-testid="nested">
+        <span>Text</span>
+      </MyNestedComponent>
+    </div>
+  );
 }
 
 function MyNestedComponent({ children, ...props }) {
-    return (
+  return (
+    <div>
+      <div>
         <div>
-            <div>
-                <div>
-                    <div {...props}>
-                        {children || null}
-                    </div>
-                </div>
-            </div>
+          <div {...props}>{children || null}</div>
         </div>
-    );
+      </div>
+    </div>
+  );
 }
 
-test('Render', () => {
-    const { container } = render(<MyComponent />);
+test("Render", () => {
+  const { container } = render(<MyComponent />);
 
-    expect(shallow(container.firstChild, { whitelist: [MyComponent] })).toMatchSnapshot();
+  expect(
+    shallow(container.firstChild, { whitelist: [MyComponent] }),
+  ).toMatchSnapshot();
 });
 ```
 

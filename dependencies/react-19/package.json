@@ -1,10 +1,10 @@
 {
-    "name": "react-19",
-    "private": true,
-    "devDependencies": {
-        "@testing-library/react": "16.1.0",
-        "react": "19.0.0",
-        "react-dom": "19.0.0",
-        "react-is": "19.0.0"
-    }
+  "name": "react-19",
+  "private": true,
+  "devDependencies": {
+    "@testing-library/react": "16.1.0",
+    "react": "19.0.0",
+    "react-dom": "19.0.0",
+    "react-is": "19.0.0"
+  }
 }
