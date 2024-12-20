@@ -1,4 +1,3 @@
-import React from "react";
 import {
   ForwardRef,
   Memo,
@@ -7,27 +6,17 @@ import {
   StrictMode,
   Suspense,
 } from "react-is";
-
-// See https://github.com/jestjs/jest/blob/22029ba06b69716699254bb9397f2b3bc7b3cf3b/packages/pretty-format/src/plugins/ReactTestComponent.ts#L16-L29
-export interface ReactTestObject {
-  $$typeof: symbol | number;
-  type: string;
-  props?: Record<string, unknown>;
-  children?: null | ReactTestChild[];
-}
-
-// Child can be `number` in Stack renderer but not in Fiber renderer.
-type ReactTestChild = ReactTestObject | string | number;
+import {
+  FiberOrInternalInstance,
+  Filter,
+  ReactTestObject,
+  ChildrenFiberOrInternalInstance,
+} from "./types";
 
 const testSymbol =
   typeof Symbol === "function" && Symbol.for
     ? Symbol.for("react.test.json")
     : 0xe_a7_13_57;
-
-interface Filter {
-  whitelist?: React.ComponentType[];
-  blacklist?: React.ComponentType[];
-}
 
 /**
  * With react fiber we get this:
@@ -100,7 +89,7 @@ function transformFilterToReactComponents(filter: Filter) {
     if (filter[key as keyof Filter]) {
       // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
       filter[key as keyof Filter] = filter[key as keyof Filter]!.map(
-        (component: any) => {
+        (component) => {
           if (Memo && component.$$typeof === Memo) {
             return component.type;
           }
@@ -113,9 +102,9 @@ function transformFilterToReactComponents(filter: Filter) {
 }
 
 function getRootReactComponent(
-  fiberOrInternalInstance: any,
+  fiberOrInternalInstance: FiberOrInternalInstance,
   filter: Filter,
-): any {
+): FiberOrInternalInstance {
   let current = fiberOrInternalInstance;
 
   // Find first component related to our filter
@@ -144,7 +133,9 @@ function getRootReactComponent(
   return current;
 }
 
-function getFiberOrInternalInstance(element: HTMLElement): any {
+function getFiberOrInternalInstance(
+  element: HTMLElement,
+): FiberOrInternalInstance {
   return Object.entries(element).find(
     ([key]) =>
       key.startsWith("__reactFiber$") || // Functional component
@@ -153,11 +144,12 @@ function getFiberOrInternalInstance(element: HTMLElement): any {
 }
 
 function renderReactComponentWithChildren(
-  reactComponent: any,
+  reactComponent: FiberOrInternalInstance,
   filter: Filter,
 ): ReactTestObject | string {
   if (!reactComponent.type && !reactComponent.elementType) {
-    return reactComponent.memoizedProps as string;
+    // @TODO: We have a bug here, memoized props can be more complex than just a string
+    return reactComponent.memoizedProps as unknown as string;
   }
 
   let children = null;
@@ -193,7 +185,7 @@ function renderReactComponentWithChildren(
 }
 
 function isComponentOwnerMatchingFilterRules(
-  reactComponent: any,
+  reactComponent: FiberOrInternalInstance,
   filter: Filter,
 ): boolean {
   if (!reactComponent._debugOwner) {
@@ -214,7 +206,7 @@ function isComponentOwnerMatchingFilterRules(
 }
 
 function renderReactComponentWithChildrenAndSiblings(
-  reactComponent: any,
+  reactComponent: FiberOrInternalInstance,
   filter: Filter,
 ): (ReactTestObject | string)[] {
   if (!isComponentOwnerMatchingFilterRules(reactComponent, filter)) {
@@ -259,7 +251,7 @@ function renderReactComponentWithChildrenAndSiblings(
  * Get type of the react component
  * Inspired by https://github.com/enzymejs/enzyme/blob/67b9ebeb3cc66ec1b3d43055c6463a595387fb14/packages/enzyme-adapter-react-16/src/ReactSixteenAdapter.js#L888
  */
-function getType({ type, elementType }: any): string {
+function getType({ type, elementType }: FiberOrInternalInstance): string {
   type = elementType || type;
 
   // Native elements
@@ -284,7 +276,7 @@ function getType({ type, elementType }: any): string {
 
   // React.forwardRef
   if (ForwardRef && type.$$typeof === ForwardRef) {
-    return `ForwardRef(${getType({ type: type.render })})`;
+    return `ForwardRef(${getType({ type: type.render } as FiberOrInternalInstance)})`;
   }
 
   // React.Fragment
@@ -311,7 +303,7 @@ function getType({ type, elementType }: any): string {
   throw new Error(`Unknown type ${type}`);
 }
 
-function getProps(node: any) {
+function getProps(node: FiberOrInternalInstance) {
   const type = node.type || node.elementType;
 
   return Object.entries(node.memoizedProps)
@@ -342,7 +334,7 @@ function getProps(node: any) {
 }
 
 function getChildrenFromProps(
-  node: any,
+  node: FiberOrInternalInstance,
 ): (string | number | ReactTestObject)[] | null {
   const { children } = node.memoizedProps || {};
 
@@ -355,13 +347,18 @@ function getChildrenFromProps(
   }
 
   if (typeof children === "object") {
-    if (children.type === Fragment) {
+    if (
+      Fragment &&
+      (children as ChildrenFiberOrInternalInstance).type === Fragment
+    ) {
       return [
         {
           $$typeof: testSymbol,
           type: "Fragment",
           props: {},
-          children: children.props.children ? [children.props.children] : null,
+          children: (children as ChildrenFiberOrInternalInstance).props.children
+            ? [(children as ChildrenFiberOrInternalInstance).props.children]
+            : null,
         },
       ];
     }
