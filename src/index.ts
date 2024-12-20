@@ -19,24 +19,8 @@ const testSymbol =
     : 0xe_a7_13_57;
 
 /**
- * With react fiber we get this:
- * reactComponent.child -> dive in
- * reactComponent.sibling -> if there is multiple elements, it will point to the next one
- * reactComponent.return -> parent component
- *
- * reactComponent._debugOwner -> owner component
- *
- * A react component can have multiple elements, so multiple elements can point to the same react component.
- * A react component might not have any HTML element, but it still appears if we walk the dom tree via `child`/`sibling`/`return`.
- *
- * reactComponent.type
- * -> string: native element
- * -> class: class component -> type.constructor.name
- * -> function: functional component -> type.displayName || type.name
- *
- * reactComponent.memoizedProps -> props
+ * Transforms a HTML element into a shallow representation of a React component
  */
-
 export function shallow(
   rootElement: HTMLElement | null,
   filter: Filter,
@@ -62,6 +46,9 @@ export function shallow(
   return renderReactComponentWithChildren(rootReactComponent, filter);
 }
 
+/**
+ * Validates filter object to have either whitelist or blacklist
+ */
 function validateFilter(filter: Filter) {
   if (filter.whitelist && filter.blacklist) {
     throw new Error(
@@ -84,6 +71,10 @@ function validateFilter(filter: Filter) {
   }
 }
 
+/**
+ * Transforms React components in filter to their actual components
+ * This is needed because React components are sometimes wrapped in React.memo or React.forwardRef
+ */
 function transformFilterToReactComponents(filter: Filter) {
   ["whitelist", "blacklist"].forEach((key) => {
     if (filter[key as keyof Filter]) {
@@ -101,6 +92,9 @@ function transformFilterToReactComponents(filter: Filter) {
   });
 }
 
+/**
+ * Climb up the tree to find the root React component matching the filter
+ */
 function getRootReactComponent(
   fiberOrInternalInstance: FiberOrInternalInstance,
   filter: Filter,
@@ -133,6 +127,9 @@ function getRootReactComponent(
   return current;
 }
 
+/**
+ * Get React Fiber or InternalInstance from a HTML element
+ */
 function getFiberOrInternalInstance(
   element: HTMLElement,
 ): FiberOrInternalInstance {
@@ -143,6 +140,9 @@ function getFiberOrInternalInstance(
   )?.[1];
 }
 
+/**
+ * Transform React component into a JSON representation
+ */
 function renderReactComponentWithChildren(
   reactComponent: FiberOrInternalInstance,
   filter: Filter,
@@ -184,6 +184,9 @@ function renderReactComponentWithChildren(
   };
 }
 
+/**
+ * Checks if the owner of the component matches the filter rules
+ */
 function isComponentOwnerMatchingFilterRules(
   reactComponent: FiberOrInternalInstance,
   filter: Filter,
@@ -205,6 +208,9 @@ function isComponentOwnerMatchingFilterRules(
   );
 }
 
+/**
+ * Recursively render React components with their children and siblings
+ */
 function renderReactComponentWithChildrenAndSiblings(
   reactComponent: FiberOrInternalInstance,
   filter: Filter,
@@ -303,6 +309,9 @@ function getType({ type, elementType }: FiberOrInternalInstance): string {
   throw new Error(`Unknown type ${type}`);
 }
 
+/**
+ * Get props of the react component
+ */
 function getProps(node: FiberOrInternalInstance) {
   const type = node.type || node.elementType;
 
@@ -333,6 +342,9 @@ function getProps(node: FiberOrInternalInstance) {
     );
 }
 
+/**
+ * Get children from props
+ */
 function getChildrenFromProps(
   node: FiberOrInternalInstance,
 ): (string | number | ReactTestObject)[] | null {
