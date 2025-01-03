@@ -37,9 +37,12 @@ const MyForwardedComponent = React.forwardRef(function MyForwardedComponent(
 
 function App() {
   return (
-    <MyComponent>
-      {ReactDOM.createPortal(<h1>Hello World One</h1>, document.body)}
-    </MyComponent>
+    <>
+      <div />
+      <MyComponent />
+      {1234}
+      {"Hello World"}
+    </>
   );
 }
 

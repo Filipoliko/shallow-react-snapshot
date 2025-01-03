@@ -25,7 +25,7 @@ const testSymbol =
 export function shallow(
   rootElement: HTMLElement | null,
   RootReactComponent: ReactComponent,
-): ReactTestObject | string | null {
+): ReactTestObject | string | number | null {
   if (rootElement === null) {
     return null;
   }
@@ -103,23 +103,98 @@ function getFiberOrInternalInstance(
  * Transform React component into a JSON representation
  */
 function renderReactComponentWithChildren(
-  reactComponent: FiberOrInternalInstance | string,
-): ReactTestObject | string {
-  if (typeof reactComponent === "string") {
+  reactComponent: FiberOrInternalInstance | string | number,
+): ReactTestObject | string | number {
+  if (typeof reactComponent !== "object") {
     return reactComponent;
   }
 
-  const childrenReactComponent: ChildrenFiberOrInternalInstance = {
-    $$typeof: testSymbol,
-    type: reactComponent.elementType,
-    props: reactComponent.memoizedProps,
-  };
+  const siblings = getReactComponentSiblings(reactComponent);
+
+  // Only if the root component is wrapped in fragment, then there can be siblings
+  if (siblings.length > 0) {
+    return {
+      $$typeof: testSymbol,
+      type: "Fragment",
+      props: {},
+      children: [reactComponent, ...siblings].map((child) => {
+        return childrenReactComponentToTestObject(
+          reactComponentToChildren(child),
+        );
+      }),
+    };
+  }
+
+  return childrenReactComponentToTestObject(
+    reactComponentToChildren(reactComponent),
+  );
+}
+
+/**
+ * Transform React component children into a ReactTestObject
+ */
+function childrenReactComponentToTestObject(
+  childrenReactComponent: ChildrenFiberOrInternalInstance | string | number,
+): ReactTestObject | string | number {
+  if (typeof childrenReactComponent !== "object") {
+    return childrenReactComponent;
+  }
 
   return {
     $$typeof: testSymbol,
     type: getType(childrenReactComponent),
     props: getProps(childrenReactComponent),
     children: getChildrenFromProps(childrenReactComponent),
+  };
+}
+
+/**
+ * Get siblings of the react component
+ */
+function getReactComponentSiblings(
+  reactComponent: FiberOrInternalInstance,
+): FiberOrInternalInstance[] {
+  const siblings = [];
+  let current = reactComponent;
+
+  while (current.sibling) {
+    siblings.push(current.sibling);
+    current = current.sibling;
+  }
+
+  return siblings;
+}
+
+/**
+ * Transform React component into a ChildrenFiberOrInternalInstance
+ */
+function reactComponentToChildren(
+  reactComponent: FiberOrInternalInstance | string | number,
+): ChildrenFiberOrInternalInstance | string | number {
+  if (typeof reactComponent !== "object") {
+    return reactComponent;
+  }
+
+  if (
+    reactComponent.memoizedProps &&
+    typeof reactComponent.memoizedProps !== "object"
+  ) {
+    return reactComponent.memoizedProps;
+  }
+
+  // React.Fragment
+  if (!reactComponent.elementType) {
+    return {
+      $$typeof: testSymbol,
+      type: "Fragment",
+      props: { children: reactComponent.memoizedProps },
+    };
+  }
+
+  return {
+    $$typeof: testSymbol,
+    type: reactComponent.elementType,
+    props: reactComponent.memoizedProps,
   };
 }
 

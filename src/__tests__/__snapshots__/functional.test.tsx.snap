@@ -117,6 +117,17 @@ exports[`Functional component render direct wrapper around react component with 
 
 exports[`Functional component render direct wrapper around react component with no child element 1`] = `<MyComponent />`;
 
+exports[`Functional component render fragment wrapper around react component with multiple children 1`] = `
+<Fragment>
+  <Fragment>
+    <div />
+    <MyComponent />
+    1234
+    Hello World
+  </Fragment>
+</Fragment>
+`;
+
 exports[`Functional component render fragment wrapper around react component with single text child 1`] = `
 <MyComponent>
   <Fragment>

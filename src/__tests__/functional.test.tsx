@@ -233,6 +233,28 @@ describe("Functional component render", () => {
     expect(result).toMatchSnapshot();
   });
 
+  test("fragment wrapper around react component with multiple children", () => {
+    function App() {
+      return (
+        <>
+          <>
+            <>
+              <div />
+              <MyComponent />
+              {1234}
+              {"Hello World"}
+            </>
+          </>
+        </>
+      );
+    }
+    const { container } = render(<App />);
+
+    const result = shallow(container.firstChild as HTMLElement, App);
+
+    expect(result).toMatchSnapshot();
+  });
+
   test("direct memoized wrapper around react component with a single child element", () => {
     const MyMemoizedComponent = React.memo(MyComponent);
     function App() {

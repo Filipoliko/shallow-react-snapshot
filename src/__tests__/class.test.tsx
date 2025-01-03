@@ -217,6 +217,32 @@ describe("Class component render", () => {
     expect(result).toMatchSnapshot();
   });
 
+  test("fragment wrapper around react component with multiple fragment children", () => {
+    class App extends Component {
+      render() {
+        return (
+          <>
+            <>
+              <>
+                <div />
+                <div />
+              </>
+            </>
+            <div />
+            <MyComponent />
+            {1234}
+            {"Hello World"}
+          </>
+        );
+      }
+    }
+    const { container } = render(<App />);
+
+    const result = shallow(container.firstChild as HTMLElement, App);
+
+    expect(result).toMatchSnapshot();
+  });
+
   test("direct memoized wrapper around react component with a single child element", () => {
     const MyMemoizedComponent = React.memo(MyComponent);
     class App extends Component {
