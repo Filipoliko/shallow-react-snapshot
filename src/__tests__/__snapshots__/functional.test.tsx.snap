@@ -39,6 +39,38 @@ exports[`Functional component render direct profiler wrapper around react compon
 </Profiler>
 `;
 
+exports[`Functional component render direct suspense wrapper around react component with a single child element 1`] = `
+<Suspense
+  fallback={
+    <div>
+      Loading...
+    </div>
+  }
+>
+  <MyComponent>
+    <h1>
+      Hello World One
+    </h1>
+  </MyComponent>
+</Suspense>
+`;
+
+exports[`Functional component render direct wrapper around components and more wrappers 1`] = `
+<WrapperAroundMyComponent>
+  <div>
+    <MyComponent>
+      <span>
+        Hello
+      </span>
+      <div>
+        txt
+        <MyComponent />
+      </div>
+    </MyComponent>
+  </div>
+</WrapperAroundMyComponent>
+`;
+
 exports[`Functional component render direct wrapper around react component that wraps another react component 1`] = `
 <WrapperAroundMyComponent>
   <h1>
@@ -93,11 +125,51 @@ exports[`Functional component render fragment wrapper around react component wit
 </MyComponent>
 `;
 
+exports[`Functional component render react component with another react component and native component as a child 1`] = `
+<MyComponent>
+  <div />
+  <MyComponent />
+</MyComponent>
+`;
+
+exports[`Functional component render react component with another react component as a child 1`] = `
+<MyComponent>
+  <MyComponent />
+</MyComponent>
+`;
+
+exports[`Functional component render react component with another whitelisted react component and native component as a child 1`] = `
+<MyComponent>
+  <div />
+  <MyComponent />
+  <MyOtherComponent />
+</MyComponent>
+`;
+
+exports[`Functional component render react component with deeply nested multiple react components as a child 1`] = `
+<MyComponent>
+  <WrapperAroundMyComponent>
+    <WrapperAroundMyComponent>
+      <MyComponent />
+      <div />
+      <MyComponent />
+    </WrapperAroundMyComponent>
+    <WrapperAroundMyComponent>
+      <MyComponent />
+      <div />
+      <MyComponent />
+    </WrapperAroundMyComponent>
+  </WrapperAroundMyComponent>
+</MyComponent>
+`;
+
 exports[`Functional component render react component with portal 1`] = `
 <MyComponent>
-  <h1>
-    Hello World One
-  </h1>
+  <Portal>
+    <h1>
+      Hello World One
+    </h1>
+  </Portal>
 </MyComponent>
 `;
 

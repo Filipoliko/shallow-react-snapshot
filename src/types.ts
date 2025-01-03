@@ -10,11 +10,7 @@ export interface ReactTestObject {
 export type ReactTestChild = ReactTestObject | string | number;
 
 // This can be any kind of react component (class, functional, memo, forwardRef, fragment, etc.)
-export type FilterListItem = any; // eslint-disable-line @typescript-eslint/no-explicit-any
-export interface Filter {
-  whitelist?: FilterListItem[];
-  blacklist?: FilterListItem[];
-}
+export type ReactComponent = any; // eslint-disable-line @typescript-eslint/no-explicit-any
 
 export interface FiberOrInternalInstance {
   type: any; // eslint-disable-line @typescript-eslint/no-explicit-any
@@ -27,6 +23,8 @@ export interface FiberOrInternalInstance {
 }
 
 export interface ChildrenFiberOrInternalInstance {
-  props: any; // eslint-disable-line @typescript-eslint/no-explicit-any
-  type: any; // eslint-disable-line @typescript-eslint/no-explicit-any
+  $$typeof: symbol | number;
+  children?: ReactTestChild[];
+  props?: any; // eslint-disable-line @typescript-eslint/no-explicit-any
+  type?: any; // eslint-disable-line @typescript-eslint/no-explicit-any
 }

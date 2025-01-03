@@ -19,6 +19,20 @@ function MyComponent({
   );
 }
 
+function MyOtherComponent({
+  children,
+  ...props
+}: {
+  children?: React.ReactNode;
+  [key: string]: any;
+}) {
+  return (
+    <div id="MyOtherComponent" {...props}>
+      {children || null}
+    </div>
+  );
+}
+
 function WrapperAroundMyComponent({
   children,
   ...props
@@ -36,9 +50,31 @@ describe("Functional component render", () => {
     }
     const { container } = render(<App />);
 
-    const result = shallow(container.firstChild as HTMLElement, {
-      whitelist: [App],
-    });
+    const result = shallow(container.firstChild as HTMLElement, App);
+
+    expect(result).toMatchSnapshot();
+  });
+
+  test("direct wrapper around components and more wrappers", () => {
+    function App() {
+      const txt = "txt";
+      return (
+        <WrapperAroundMyComponent>
+          <div>
+            <MyComponent>
+              <span>Hello</span>
+              <div>
+                {txt}
+                <MyComponent />
+              </div>
+            </MyComponent>
+          </div>
+        </WrapperAroundMyComponent>
+      );
+    }
+    const { container } = render(<App />);
+
+    const result = shallow(container.firstChild as HTMLElement, App);
 
     expect(result).toMatchSnapshot();
   });
@@ -53,9 +89,7 @@ describe("Functional component render", () => {
     }
     const { container } = render(<App />);
 
-    const result = shallow(container.firstChild as HTMLElement, {
-      whitelist: [App],
-    });
+    const result = shallow(container.firstChild as HTMLElement, App);
 
     expect(result).toMatchSnapshot();
   });
@@ -82,9 +116,7 @@ describe("Functional component render", () => {
     }
     const { container } = render(<App />);
 
-    const result = shallow(container.firstChild as HTMLElement, {
-      whitelist: [App],
-    });
+    const result = shallow(container.firstChild as HTMLElement, App);
 
     expect(result).toMatchSnapshot();
   });
@@ -99,9 +131,7 @@ describe("Functional component render", () => {
     }
     const { container } = render(<App />);
 
-    const result = shallow(container.firstChild as HTMLElement, {
-      whitelist: [App],
-    });
+    const result = shallow(container.firstChild as HTMLElement, App);
 
     expect(result).toMatchSnapshot();
   });
@@ -118,9 +148,7 @@ describe("Functional component render", () => {
     }
     const { container } = render(<App />);
 
-    const result = shallow(container.firstChild as HTMLElement, {
-      whitelist: [App],
-    });
+    const result = shallow(container.firstChild as HTMLElement, App);
 
     expect(result).toMatchSnapshot();
   });
@@ -135,9 +163,7 @@ describe("Functional component render", () => {
     }
     const { container } = render(<App />);
 
-    const result = shallow(container.firstChild as HTMLElement, {
-      whitelist: [App],
-    });
+    const result = shallow(container.firstChild as HTMLElement, App);
 
     expect(result).toMatchSnapshot();
   });
@@ -155,9 +181,7 @@ describe("Functional component render", () => {
     }
     const { container } = render(<App />);
 
-    const result = shallow(container.firstChild as HTMLElement, {
-      whitelist: [App],
-    });
+    const result = shallow(container.firstChild as HTMLElement, App);
 
     expect(result).toMatchSnapshot();
   });
@@ -172,9 +196,7 @@ describe("Functional component render", () => {
     }
     const { container } = render(<App />);
 
-    const result = shallow(container.firstChild as HTMLElement, {
-      whitelist: [App],
-    });
+    const result = shallow(container.firstChild as HTMLElement, App);
 
     expect(result).toMatchSnapshot();
   });
@@ -189,9 +211,7 @@ describe("Functional component render", () => {
     }
     const { container } = render(<App />);
 
-    const result = shallow(container.firstChild as HTMLElement, {
-      whitelist: [App],
-    });
+    const result = shallow(container.firstChild as HTMLElement, App);
 
     expect(result).toMatchSnapshot();
   });
@@ -208,9 +228,7 @@ describe("Functional component render", () => {
     }
     const { container } = render(<App />);
 
-    const result = shallow(container.firstChild as HTMLElement, {
-      whitelist: [App],
-    });
+    const result = shallow(container.firstChild as HTMLElement, App);
 
     expect(result).toMatchSnapshot();
   });
@@ -226,9 +244,7 @@ describe("Functional component render", () => {
     }
     const { container } = render(<App />);
 
-    const result = shallow(container.firstChild as HTMLElement, {
-      whitelist: [App],
-    });
+    const result = shallow(container.firstChild as HTMLElement, App);
 
     expect(result).toMatchSnapshot();
   });
@@ -239,9 +255,7 @@ describe("Functional component render", () => {
     });
     const { container } = render(<App />);
 
-    const result = shallow(container.firstChild as HTMLElement, {
-      whitelist: [App],
-    });
+    const result = shallow(container.firstChild as HTMLElement, App);
 
     expect(result).toMatchSnapshot();
   });
@@ -266,9 +280,7 @@ describe("Functional component render", () => {
     }
     const { container } = render(<App />);
 
-    const result = shallow(container.firstChild as HTMLElement, {
-      whitelist: [App],
-    });
+    const result = shallow(container.firstChild as HTMLElement, App);
 
     expect(result).toMatchSnapshot();
   });
@@ -285,9 +297,7 @@ describe("Functional component render", () => {
     }
     const { container } = render(<App />);
 
-    const result = shallow(container.firstChild as HTMLElement, {
-      whitelist: [App],
-    });
+    const result = shallow(container.firstChild as HTMLElement, App);
 
     expect(result).toMatchSnapshot();
   });
@@ -304,15 +314,12 @@ describe("Functional component render", () => {
     }
     const { container } = render(<App />);
 
-    const result = shallow(container.firstChild as HTMLElement, {
-      whitelist: [App],
-    });
+    const result = shallow(container.firstChild as HTMLElement, App);
 
     expect(result).toMatchSnapshot();
   });
 
-  // @TODO: Suspense is rendering a bit differently for React 16
-  test.skip("direct suspense wrapper around react component with a single child element", () => {
+  test("direct suspense wrapper around react component with a single child element", () => {
     function App() {
       return (
         <React.Suspense fallback={<div>Loading...</div>}>
@@ -324,9 +331,7 @@ describe("Functional component render", () => {
     }
     const { container } = render(<App />);
 
-    const result = shallow(container.firstChild as HTMLElement, {
-      whitelist: [App],
-    });
+    const result = shallow(container.firstChild as HTMLElement, App);
 
     expect(result).toMatchSnapshot();
   });
@@ -341,24 +346,81 @@ describe("Functional component render", () => {
     }
     const { container } = render(<App />);
 
-    const result = shallow(container.firstChild as HTMLElement, {
-      whitelist: [App],
-    });
+    const result = shallow(container.firstChild as HTMLElement, App);
 
     expect(result).toMatchSnapshot();
   });
 
-  // @TODO: This test is crashing the shallow script, fix it and re-enable test
-  test.skip("react component with another react component as a child", () => {
+  test("react component with another react component as a child", () => {
     const { container } = render(
       <WrapperAroundMyComponent>
         <MyComponent />
       </WrapperAroundMyComponent>,
     );
 
-    const result = shallow(container.firstChild as HTMLElement, {
-      whitelist: [WrapperAroundMyComponent],
-    });
+    const result = shallow(
+      container.firstChild as HTMLElement,
+      WrapperAroundMyComponent,
+    );
+
+    expect(result).toMatchSnapshot();
+  });
+
+  test("react component with another react component and native component as a child", () => {
+    const { container } = render(
+      <WrapperAroundMyComponent>
+        <div />
+        <MyComponent />
+      </WrapperAroundMyComponent>,
+    );
+
+    const result = shallow(
+      container.firstChild as HTMLElement,
+      WrapperAroundMyComponent,
+    );
+
+    expect(result).toMatchSnapshot();
+  });
+
+  test("react component with another whitelisted react component and native component as a child", () => {
+    const { container } = render(
+      <WrapperAroundMyComponent>
+        <div />
+        <MyComponent />
+        <MyOtherComponent />
+      </WrapperAroundMyComponent>,
+    );
+
+    const result = shallow(
+      container.firstChild as HTMLElement,
+      WrapperAroundMyComponent,
+    );
+
+    expect(result).toMatchSnapshot();
+  });
+
+  test("react component with deeply nested multiple react components as a child", () => {
+    const { container } = render(
+      <WrapperAroundMyComponent>
+        <WrapperAroundMyComponent>
+          <WrapperAroundMyComponent>
+            <MyComponent />
+            <div />
+            <MyComponent />
+          </WrapperAroundMyComponent>
+          <WrapperAroundMyComponent>
+            <MyComponent />
+            <div />
+            <MyComponent />
+          </WrapperAroundMyComponent>
+        </WrapperAroundMyComponent>
+      </WrapperAroundMyComponent>,
+    );
+
+    const result = shallow(
+      container.firstChild as HTMLElement,
+      WrapperAroundMyComponent,
+    );
 
     expect(result).toMatchSnapshot();
   });

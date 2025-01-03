@@ -2,13 +2,14 @@ import {
   ForwardRef,
   Memo,
   Fragment,
+  Portal,
   Profiler,
   StrictMode,
   Suspense,
 } from "react-is";
 import {
   FiberOrInternalInstance,
-  Filter,
+  ReactComponent,
   ReactTestObject,
   ChildrenFiberOrInternalInstance,
 } from "./types";
@@ -23,11 +24,8 @@ const testSymbol =
  */
 export function shallow(
   rootElement: HTMLElement | null,
-  filter: Filter,
+  RootReactComponent: ReactComponent,
 ): ReactTestObject | string | null {
-  validateFilter(filter);
-  transformFilterToReactComponents(filter);
-
   if (rootElement === null) {
     return null;
   }
@@ -38,87 +36,48 @@ export function shallow(
     return null;
   }
 
-  const rootReactComponent = getRootReactComponent(
+  const rootReactComponent = getFirstChildOfRootReactComponent(
     fiberOrInternalInstance,
-    filter,
+    RootReactComponent,
   );
 
-  return renderReactComponentWithChildren(rootReactComponent, filter);
-}
-
-/**
- * Validates filter object to have either whitelist or blacklist
- */
-function validateFilter(filter: Filter) {
-  if (filter.whitelist && filter.blacklist) {
-    throw new Error(
-      "Shallow: You cannot use both whitelist and blacklist filters",
-    );
-  }
-
-  if (!filter.whitelist && !filter.blacklist) {
-    throw new Error(
-      "Shallow: You must provide either whitelist or blacklist filter",
-    );
-  }
-
-  if (filter.whitelist && !Array.isArray(filter.whitelist)) {
-    throw new Error("Shallow: Whitelist filter must be an array");
-  }
-
-  if (filter.blacklist && !Array.isArray(filter.blacklist)) {
-    throw new Error("Shallow: Blacklist filter must be an array");
-  }
+  return renderReactComponentWithChildren(rootReactComponent);
 }
 
 /**
  * Transforms React components in filter to their actual components
  * This is needed because React components are sometimes wrapped in React.memo or React.forwardRef
  */
-function transformFilterToReactComponents(filter: Filter) {
-  ["whitelist", "blacklist"].forEach((key) => {
-    if (filter[key as keyof Filter]) {
-      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-      filter[key as keyof Filter] = filter[key as keyof Filter]!.map(
-        (component) => {
-          if (Memo && component.$$typeof === Memo) {
-            return component.type;
-          }
+function transformRootReactComponent(
+  RootReactComponent: ReactComponent,
+): ReactComponent {
+  if (Memo && RootReactComponent.$$typeof === Memo) {
+    return RootReactComponent.type;
+  }
 
-          return component;
-        },
-      );
-    }
-  });
+  return RootReactComponent;
 }
 
 /**
  * Climb up the tree to find the root React component matching the filter
  */
-function getRootReactComponent(
+function getFirstChildOfRootReactComponent(
   fiberOrInternalInstance: FiberOrInternalInstance,
-  filter: Filter,
+  RootReactComponent: ReactComponent,
 ): FiberOrInternalInstance {
+  const TransformedRootReactComponent =
+    transformRootReactComponent(RootReactComponent);
   let current = fiberOrInternalInstance;
 
   // Find first component related to our filter
-  if (!isComponentOwnerMatchingFilterRules(current, filter)) {
-    while (
-      current.return &&
-      !isComponentOwnerMatchingFilterRules(current.return, filter)
-    ) {
-      current = current.return;
-    }
-  }
-
   while (
     current.return &&
-    isComponentOwnerMatchingFilterRules(current.return, filter)
+    !isParentComponentMatching(current, TransformedRootReactComponent)
   ) {
     current = current.return;
   }
 
-  if (!isComponentOwnerMatchingFilterRules(current, filter)) {
+  if (!isParentComponentMatching(current, TransformedRootReactComponent)) {
     throw new Error(
       "Shallow: Unable to find root component. This should not happen. Please, report this issue.",
     );
@@ -144,121 +103,57 @@ function getFiberOrInternalInstance(
  * Transform React component into a JSON representation
  */
 function renderReactComponentWithChildren(
-  reactComponent: FiberOrInternalInstance,
-  filter: Filter,
+  reactComponent: FiberOrInternalInstance | string,
 ): ReactTestObject | string {
-  if (!reactComponent.type && !reactComponent.elementType) {
-    // @TODO: We have a bug here, memoized props can be more complex than just a string
-    return reactComponent.memoizedProps as unknown as string;
+  if (typeof reactComponent === "string") {
+    return reactComponent;
   }
 
-  let children = null;
-
-  // Check for React child elements
-  if (reactComponent.child) {
-    const childrenCandidate = renderReactComponentWithChildrenAndSiblings(
-      reactComponent.child,
-      filter,
-    );
-
-    // If there are some children, we render them
-    if (childrenCandidate.length) {
-      children = childrenCandidate;
-    }
-  }
-
-  // If there are no children, we try to render children from props (if there are any)
-  if (!children) {
-    const childrenCandidate = getChildrenFromProps(reactComponent);
-
-    if (childrenCandidate) {
-      children = childrenCandidate;
-    }
-  }
+  const childrenReactComponent: ChildrenFiberOrInternalInstance = {
+    $$typeof: testSymbol,
+    type: reactComponent.elementType,
+    props: reactComponent.memoizedProps,
+  };
 
   return {
     $$typeof: testSymbol,
-    type: getType(reactComponent),
-    props: getProps(reactComponent),
-    children,
+    type: getType(childrenReactComponent),
+    props: getProps(childrenReactComponent),
+    children: getChildrenFromProps(childrenReactComponent),
   };
 }
 
 /**
- * Checks if the owner of the component matches the filter rules
+ * Check if parent of reactComponent is matching the Component
  */
-function isComponentOwnerMatchingFilterRules(
+function isParentComponentMatching(
   reactComponent: FiberOrInternalInstance,
-  filter: Filter,
+  Component: ReactComponent,
 ): boolean {
-  if (!reactComponent._debugOwner) {
+  if (!reactComponent.return) {
     return false;
   }
 
-  if (filter.whitelist) {
-    return filter.whitelist.includes(reactComponent._debugOwner.type);
-  }
-
-  if (filter.blacklist) {
-    return !filter.blacklist.includes(reactComponent._debugOwner.type);
-  }
-
-  throw new Error(
-    "Shallow: This should not happen. Please, report this issue.",
-  );
-}
-
-/**
- * Recursively render React components with their children and siblings
- */
-function renderReactComponentWithChildrenAndSiblings(
-  reactComponent: FiberOrInternalInstance,
-  filter: Filter,
-): (ReactTestObject | string)[] {
-  if (!isComponentOwnerMatchingFilterRules(reactComponent, filter)) {
-    const children = [];
-
-    if (reactComponent.child) {
-      children.push(
-        ...renderReactComponentWithChildrenAndSiblings(
-          reactComponent.child,
-          filter,
-        ),
-      );
-    }
-
-    if (reactComponent.sibling) {
-      children.push(
-        ...renderReactComponentWithChildrenAndSiblings(
-          reactComponent.sibling,
-          filter,
-        ),
-      );
-    }
-
-    return children;
-  }
-
-  const result: (ReactTestObject | string)[] = [
-    renderReactComponentWithChildren(reactComponent, filter),
-  ];
-
-  let sibling = reactComponent.sibling;
-
-  while (sibling) {
-    result.push(renderReactComponentWithChildren(sibling, filter));
-    sibling = sibling.sibling;
-  }
-
-  return result;
+  return reactComponent.return.type === Component;
 }
 
 /**
  * Get type of the react component
  * Inspired by https://github.com/enzymejs/enzyme/blob/67b9ebeb3cc66ec1b3d43055c6463a595387fb14/packages/enzyme-adapter-react-16/src/ReactSixteenAdapter.js#L888
  */
-function getType({ type, elementType }: FiberOrInternalInstance): string {
-  type = elementType || type;
+function getType(instance: ChildrenFiberOrInternalInstance): string {
+  const { type, $$typeof } = instance;
+
+  if (Portal && $$typeof && $$typeof === Portal) {
+    return "Portal";
+  }
+
+  if (!type) {
+    console.log(instance);
+    throw new Error(
+      "Shallow: Unable to get type of the component. This should not happen. Please, report this issue.",
+    );
+  }
 
   // Native elements
   if (typeof type === "string") {
@@ -282,7 +177,7 @@ function getType({ type, elementType }: FiberOrInternalInstance): string {
 
   // React.forwardRef
   if (ForwardRef && type.$$typeof === ForwardRef) {
-    return `ForwardRef(${getType({ type: type.render } as FiberOrInternalInstance)})`;
+    return `ForwardRef(${getType({ type: type.render } as ChildrenFiberOrInternalInstance)})`;
   }
 
   // React.Fragment
@@ -312,22 +207,15 @@ function getType({ type, elementType }: FiberOrInternalInstance): string {
 /**
  * Get props of the react component
  */
-function getProps(node: FiberOrInternalInstance) {
-  const type = node.type || node.elementType;
+function getProps(
+  node: ChildrenFiberOrInternalInstance,
+): Record<string, unknown> {
+  const { props = {} } = node;
 
-  return Object.entries(node.memoizedProps)
+  return Object.entries(props)
     .filter(([key, value]) => {
       // Skip children and undefined values
       if (key === "children" || value === undefined) {
-        return false;
-      }
-
-      // Skip default props
-      if (
-        type.defaultProps &&
-        key in type.defaultProps &&
-        type.defaultProps[key] === value
-      ) {
         return false;
       }
 
@@ -346,37 +234,27 @@ function getProps(node: FiberOrInternalInstance) {
  * Get children from props
  */
 function getChildrenFromProps(
-  node: FiberOrInternalInstance,
+  node: ChildrenFiberOrInternalInstance,
 ): (string | number | ReactTestObject)[] | null {
-  const { children } = node.memoizedProps || {};
+  const { children } = node.props || (node.children && node) || {};
 
   if (!children) {
     return null;
   }
 
-  if (typeof children === "string" || typeof children === "number") {
-    return [children];
-  }
+  const arrayOfChildren = Array.isArray(children) ? children : [children];
 
-  if (typeof children === "object") {
-    if (
-      Fragment &&
-      (children as ChildrenFiberOrInternalInstance).type === Fragment
-    ) {
-      return [
-        {
-          $$typeof: testSymbol,
-          type: "Fragment",
-          props: {},
-          children: (children as ChildrenFiberOrInternalInstance).props.children
-            ? [(children as ChildrenFiberOrInternalInstance).props.children]
-            : null,
-        },
-      ];
+  return arrayOfChildren.map((child) => {
+    // If child is any non-object value (number, string, boolean, ...), or null, return it as is
+    if (typeof child !== "object" || child === null) {
+      return child;
     }
-  }
 
-  throw new Error(
-    "Shallow: Unable to get children from props. This should not happen. Please, report this issue.",
-  );
+    return {
+      $$typeof: testSymbol,
+      type: getType(child),
+      props: getProps(child),
+      children: getChildrenFromProps(child),
+    };
+  });
 }

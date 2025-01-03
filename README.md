@@ -55,9 +55,7 @@ function MyNestedComponent({ children, ...props }) {
 test("Render", () => {
   const { container } = render(<MyComponent />);
 
-  expect(
-    shallow(container.firstChild, { whitelist: [MyComponent] }),
-  ).toMatchSnapshot();
+  expect(shallow(container.firstChild, MyComponent)).toMatchSnapshot();
 });
 ```
 

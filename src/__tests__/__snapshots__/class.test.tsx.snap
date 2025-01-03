@@ -31,6 +31,22 @@ exports[`Class component render direct profiler wrapper around react component w
 </Profiler>
 `;
 
+exports[`Class component render direct suspense wrapper around react component with a single child element 1`] = `
+<Suspense
+  fallback={
+    <div>
+      Loading...
+    </div>
+  }
+>
+  <MyComponent>
+    <h1>
+      Hello World One
+    </h1>
+  </MyComponent>
+</Suspense>
+`;
+
 exports[`Class component render direct wrapper around react component that wraps another react component 1`] = `
 <WrapperAroundMyComponent>
   <h1>
@@ -85,11 +101,43 @@ exports[`Class component render fragment wrapper around react component with sin
 </MyComponent>
 `;
 
+exports[`Class component render react component with another react component as a child 1`] = `
+<MyComponent>
+  <MyComponent />
+</MyComponent>
+`;
+
+exports[`Class component render react component with deeply nested multiple react components as a child 1`] = `
+<MyComponent>
+  <WrapperAroundMyComponent>
+    <WrapperAroundMyComponent>
+      <MyComponent />
+      <div />
+      <MyComponent />
+    </WrapperAroundMyComponent>
+    <WrapperAroundMyComponent>
+      <MyComponent />
+      <div />
+      <MyComponent />
+    </WrapperAroundMyComponent>
+  </WrapperAroundMyComponent>
+</MyComponent>
+`;
+
 exports[`Class component render react component with portal 1`] = `
 <MyComponent>
-  <h1>
-    Hello World One
-  </h1>
+  <Portal>
+    <h1>
+      Hello World One
+    </h1>
+  </Portal>
+</MyComponent>
+`;
+
+exports[`Class component render react component with with another react component and native component as a child 1`] = `
+<MyComponent>
+  <div />
+  <MyComponent />
 </MyComponent>
 `;
 
