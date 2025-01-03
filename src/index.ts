@@ -340,5 +340,5 @@ function getChildrenFromProps(
  */
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 function reactFalsyValuesFilter(value: any): boolean {
-  return ![null, false].includes(value);
+  return ![undefined, null, false].includes(value);
 }
