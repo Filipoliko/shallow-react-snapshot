@@ -235,6 +235,8 @@ describe("Functional component render", () => {
 
   test("fragment wrapper around react component with multiple children", () => {
     function App() {
+      const neverTrue = false;
+
       return (
         <>
           <>
@@ -243,6 +245,7 @@ describe("Functional component render", () => {
               <MyComponent />
               {1234}
               {"Hello World"}
+              {neverTrue && <div>I should not be rendered</div>}
             </>
           </>
         </>

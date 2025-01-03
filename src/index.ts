@@ -117,11 +117,13 @@ function renderReactComponentWithChildren(
       $$typeof: testSymbol,
       type: "Fragment",
       props: {},
-      children: [reactComponent, ...siblings].map((child) => {
-        return childrenReactComponentToTestObject(
-          reactComponentToChildren(child),
-        );
-      }),
+      children: [reactComponent, ...siblings]
+        .map((child) => {
+          return childrenReactComponentToTestObject(
+            reactComponentToChildren(child),
+          );
+        })
+        .filter(reactFalsyValuesFilter),
     };
   }
 
@@ -318,9 +320,9 @@ function getChildrenFromProps(
 
   const arrayOfChildren = Array.isArray(children) ? children : [children];
 
-  return arrayOfChildren.map((child) => {
-    // If child is any non-object value (number, string, boolean, ...), or null, return it as is
-    if (typeof child !== "object" || child === null) {
+  return arrayOfChildren.filter(reactFalsyValuesFilter).map((child) => {
+    // If child is any non-object value (number, string), return it as is
+    if (typeof child !== "object") {
       return child;
     }
 
@@ -331,4 +333,12 @@ function getChildrenFromProps(
       children: getChildrenFromProps(child),
     };
   });
+}
+
+/**
+ * Filter falsy values from React children
+ */
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+function reactFalsyValuesFilter(value: any): boolean {
+  return ![null, false].includes(value);
 }

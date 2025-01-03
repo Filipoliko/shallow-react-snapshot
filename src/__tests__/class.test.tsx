@@ -220,6 +220,8 @@ describe("Class component render", () => {
   test("fragment wrapper around react component with multiple fragment children", () => {
     class App extends Component {
       render() {
+        const neverTrue = false;
+
         return (
           <>
             <>
@@ -232,6 +234,7 @@ describe("Class component render", () => {
             <MyComponent />
             {1234}
             {"Hello World"}
+            {neverTrue && <div>I should not be rendered</div>}
           </>
         );
       }
