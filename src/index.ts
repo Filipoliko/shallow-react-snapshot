@@ -224,7 +224,6 @@ function getType(instance: ChildrenFiberOrInternalInstance): string {
   }
 
   if (!type) {
-    console.log(instance);
     throw new Error(
       "Shallow: Unable to get type of the component. This should not happen. Please, report this issue.",
     );
