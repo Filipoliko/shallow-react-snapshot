@@ -14,7 +14,7 @@ done
 
 function findDependency() {
   local dependency=$1
-  node -e "const findDependency = require('./scripts/lib/findDependency.mjs'); console.log(findDependency('$dependency', 'react-$REACT_VERSION'))"
+  node -e "import('./scripts/lib/findDependency.mjs').then(({ default: findDependency }) => console.log(findDependency('$dependency', 'react-$REACT_VERSION')))"
 }
 
 # Cleanup playground/dist

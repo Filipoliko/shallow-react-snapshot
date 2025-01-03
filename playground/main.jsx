@@ -1,8 +1,14 @@
-// @TODO: This is just a copy paste from src/__tests__/functional.test.tsx
-// Lets load this dynamically
 function MyComponent({ children, ...props }) {
   return (
     <div id="MyComponent" {...props}>
+      {children || null}
+    </div>
+  );
+}
+
+function MyOtherComponent({ children, ...props }) {
+  return (
+    <div id="MyOtherComponent" {...props}>
       {children || null}
     </div>
   );
@@ -29,28 +35,20 @@ const MyForwardedComponent = React.forwardRef(function MyForwardedComponent(
   );
 });
 
-const testCases = [
-  {
-    description:
-      "direct wrapper around react component with a single child element and children on second position",
-    App: function App() {
-      return (
-        <MyComponentWithChildrenOnSecondPosition>
-          <h1>Hello World One</h1>
-        </MyComponentWithChildrenOnSecondPosition>
-      );
-    },
-  },
-];
+function App() {
+  return (
+    <MyComponent>
+      {ReactDOM.createPortal(<h1>Hello World One</h1>, document.body)}
+    </MyComponent>
+  );
+}
 
-testCases.forEach(({ App }, index) => {
-  const root = document.createElement("div");
-  root.id = `root-${index}`;
-  document.body.appendChild(root);
+const root = document.createElement("div");
+root.id = "root";
+document.body.appendChild(root);
 
-  if (Number(React.version.split(".")[0]) >= 18) {
-    ReactDOM.createRoot(root).render(<App />);
-  } else {
-    ReactDOM.render(<App />, root);
-  }
-});
+if (Number(React.version.split(".")[0]) >= 18) {
+  ReactDOM.createRoot(root).render(<App />);
+} else {
+  ReactDOM.render(<App />, root);
+}
