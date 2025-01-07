@@ -4,8 +4,30 @@
     <title>My React app</title>
   </head>
   <body>
-    <script src="./dist/react.development.js"></script>
-    <script src="./dist/react-dom.development.js"></script>
-    <script type="module" src="./dist/main.js"></script>
+    <script>
+      // This script will catch any unhandled promise rejections and errors and display them on the page
+      function appendErrorElement(error) {
+        const errorElement = document.createElement("div");
+        errorElement.style = "color: red; font-size: 20px; padding: 20px;";
+        errorElement.innerHTML = error;
+        document.body.appendChild(errorElement);
+      }
+
+      window.addEventListener("unhandledrejection", function (event) {
+        appendErrorElement(event.reason);
+      });
+
+      window.addEventListener("error", function (event) {
+        appendErrorElement(event.error);
+      });
+    </script>
+    <script type="module">
+      import React from "__REACT_UMD_LINK__";
+      import ReactDOM from "__REACT_DOM_UMD_LINK__";
+
+      window.React = React;
+      window.ReactDOM = ReactDOM;
+    </script>
+    <script type="module" src="./main.js"></script>
   </body>
 </html>

@@ -20,7 +20,7 @@ This library is tested with jest, JSDOM and React Testing Library, but it is not
 REACT_VERSION="<your-react-version>" npm install --save-dev shallow-react-snapshot react-is@$REACT_VERSION
 ```
 
-SRS requires `react-is` to work properly. You need to install it manually and it should match the version of React you are using.
+Shallow React Snapshot requires `react-is` to work properly. You need to install it manually and it should match the version of React you are using.
 
 This library officially supports React 16 and newer.
 
