@@ -1,0 +1,5 @@
+// Visit https://aka.ms/tsconfig to read more about this file
+{
+  "extends": "./tsconfig.json",
+  "exclude": ["**/__tests__/**"]
+}

@@ -1,7 +1,6 @@
 // Visit https://aka.ms/tsconfig to read more about this file
 {
   "include": ["src/**/*"],
-  "exclude": ["**/__tests__/**"],
   "compilerOptions": {
     "target": "es2016",
     "jsx": "react",

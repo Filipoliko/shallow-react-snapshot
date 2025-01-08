@@ -14,7 +14,7 @@
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
   "scripts": {
-    "build": "tsc",
+    "build": "tsc -p tsconfig.build.json",
     "eslint": "eslint .",
     "prettier": "prettier --write .",
     "playground": "./scripts/playground.sh",
@@ -42,8 +42,5 @@
     "ts-jest": "^29.2.5",
     "typescript": "^5.7.2",
     "typescript-eslint": "^8.18.1"
-  },
-  "peerDependencies": {
-    "react-is": "*"
   }
 }

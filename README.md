@@ -14,13 +14,13 @@ It does **NOT** render your components. It does **NOT** mock deeply nested React
 
 **Warning:** Shallow React Snapshot is in early development. Breaking changes may occur with minor version updates.
 
-This library is tested with jest, JSDOM and React Testing Library, but it is not limited to these tools.
+Run following command to install Shallow React Snapshot.
 
 ```bash
-REACT_VERSION="<your-react-version>" npm install --save-dev shallow-react-snapshot react-is@$REACT_VERSION
+npm install --save-dev shallow-react-snapshot
 ```
 
-Shallow React Snapshot requires `react-is` to work properly. You need to install it manually and it should match the version of React you are using.
+This library is tested with jest, JSDOM and React Testing Library, but it is not limited to these tools.
 
 This library officially supports React 16 and newer.
 

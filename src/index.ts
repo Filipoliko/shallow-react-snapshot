@@ -6,7 +6,7 @@ import {
   Profiler,
   StrictMode,
   Suspense,
-} from "react-is";
+} from "./reactSymbols";
 import {
   FiberOrInternalInstance,
   ReactComponent,
