@@ -184,6 +184,12 @@ exports[`Functional component render react component with portal 1`] = `
 </MyComponent>
 `;
 
+exports[`Functional component render wrapped in React.forwardRef 1`] = `
+<MyComponent>
+  Hello World One
+</MyComponent>
+`;
+
 exports[`Functional component render wrapped in React.memo 1`] = `
 <MyComponent>
   Hello World One

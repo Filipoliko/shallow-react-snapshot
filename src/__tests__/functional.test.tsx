@@ -285,6 +285,17 @@ describe("Functional component render", () => {
     expect(result).toMatchSnapshot();
   });
 
+  test("wrapped in React.forwardRef", () => {
+    const App = React.forwardRef(function App() {
+      return <MyComponent>Hello World One</MyComponent>;
+    });
+    const { container } = render(<App />);
+
+    const result = shallow(container.firstChild as HTMLElement, App);
+
+    expect(result).toMatchSnapshot();
+  });
+
   test("direct forwarded wrapper around react component with a single child element", () => {
     const MyForwardedComponent = React.forwardRef(function MyForwardedComponent(
       { children }: { children: React.ReactNode },
