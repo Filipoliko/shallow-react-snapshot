@@ -6,7 +6,7 @@ Are you tired of the deep HTML structures in your React Testing Library snapshot
 
 It takes an already rendered HTML element and returns jest-friendly shallow JSON structure, which you can use in your snapshot tests. It helps you validate just the currently tested component and does not display the whole tree of nested components.
 
-**What does this library not do?**
+**What does this library NOT do?**
 
 It does **NOT** render your components. It does **NOT** mock deeply nested React components. It does **NOT** replace React Testing Library, but it works well with it.
 
