@@ -12,8 +12,6 @@ It does **NOT** render your components. It does **NOT** mock deeply nested React
 
 ## Installation
 
-**Warning:** Shallow React Snapshot is in early development. Breaking changes may occur with minor version updates.
-
 Run following command to install Shallow React Snapshot.
 
 ```bash
@@ -76,3 +74,7 @@ exports[`Render 1`] = `
 </div>
 `;
 ```
+
+## Contributing
+
+If you want to contribute to this project, please read the [CONTRIBUTING.md](CONTRIBUTING.md) file.
