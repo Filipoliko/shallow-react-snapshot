@@ -1,17 +1,17 @@
 import {
   ForwardRef,
-  Memo,
   Fragment,
+  Memo,
   Portal,
   Profiler,
   StrictMode,
   Suspense,
 } from "./reactSymbols";
-import {
+import type {
+  ChildrenFiberOrInternalInstance,
   FiberOrInternalInstance,
   ReactComponent,
   ReactTestObject,
-  ChildrenFiberOrInternalInstance,
 } from "./types";
 
 const testSymbol =
@@ -338,7 +338,7 @@ function getChildrenFromProps(
 /**
  * Filter falsy values from React children
  */
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
+// biome-ignore lint/suspicious/noExplicitAny: We are very generic here, you can really pass anything
 function reactFalsyValuesFilter(value: any): boolean {
   return ![undefined, null, false].includes(value);
 }

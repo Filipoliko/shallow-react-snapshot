@@ -10,11 +10,14 @@ export interface ReactTestObject {
 export type ReactTestChild = ReactTestObject | string | number;
 
 // This can be any kind of react component (class, functional, memo, forwardRef, fragment, etc.)
-export type ReactComponent = any; // eslint-disable-line @typescript-eslint/no-explicit-any
+// biome-ignore lint/suspicious/noExplicitAny: No typing available from 3rd party library
+export type ReactComponent = any;
 
 export interface FiberOrInternalInstance {
-  type: any; // eslint-disable-line @typescript-eslint/no-explicit-any
-  elementType?: any; // eslint-disable-line @typescript-eslint/no-explicit-any
+  // biome-ignore lint/suspicious/noExplicitAny: No typing available from 3rd party library
+  type: any;
+  // biome-ignore lint/suspicious/noExplicitAny: No typing available from 3rd party library
+  elementType?: any;
   memoizedProps: Record<string, unknown>;
   child: FiberOrInternalInstance | null;
   sibling: FiberOrInternalInstance | null;
@@ -25,6 +28,8 @@ export interface FiberOrInternalInstance {
 export interface ChildrenFiberOrInternalInstance {
   $$typeof: symbol | number;
   children?: ReactTestChild[];
-  props?: any; // eslint-disable-line @typescript-eslint/no-explicit-any
-  type?: any; // eslint-disable-line @typescript-eslint/no-explicit-any
+  // biome-ignore lint/suspicious/noExplicitAny: No typing available from 3rd party library
+  props?: any;
+  // biome-ignore lint/suspicious/noExplicitAny: No typing available from 3rd party library
+  type?: any;
 }

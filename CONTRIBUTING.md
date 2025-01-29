@@ -12,6 +12,10 @@ To run tests only for a single react version, use `npm test -- --selectProjects 
 
 ## Codestyle
 
-We are using [prettier](https://prettier.io/) for code formatting and eslint for static code analysis.
+We are using [biome](https://biomejs.dev) for code formatting and linting.
 
-Run `npm run prettier` to format your code and `npm run eslint` to check for linting errors.
+Run `npm run lint` to check for formatting / linter issues in your code.
+
+Run `npm run lint:fix` to fix formatting / linter issues in your code.
+
+Run `npm run lint:fix:unsafe` to fix formatting / linter issues in your code including [unsafe fixes](https://biomejs.dev/linter/#unsafe-fixes).
