@@ -18,7 +18,7 @@
   ],
   "repository": {
     "type": "git",
-    "url": "https://github.com/Filipoliko/shallow-react-snapshot.git"
+    "url": "git+https://github.com/Filipoliko/shallow-react-snapshot.git"
   },
   "bugs": "https://github.com/Filipoliko/shallow-react-snapshot/issues",
   "main": "./dist/index.js",
