@@ -2,11 +2,12 @@
   "name": "shallow-react-snapshot",
   "version": "0.1.5",
   "workspaces": ["dependencies/*", "."],
-  "keywords": ["shallow", "react", "snapshot", "testing", "jest"],
+  "keywords": ["shallow", "react", "snapshot", "testing", "jest", "enzyme"],
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
   "scripts": {
     "build": "tsc -p tsconfig.build.json",
+    "changeset": "changeset",
     "lint": "npx @biomejs/biome check .",
     "lint:fix": "npm run lint -- --write",
     "lint:fix:unsafe": "npm run lint -- --write --unsafe",
@@ -16,7 +17,7 @@
   },
   "author": "Filip Šátek <satek.filip@gmail.com>",
   "license": "MIT",
-  "description": "",
+  "description": "Enzyme-like shallow snapshots with React Testing Library",
   "devDependencies": {
     "@biomejs/biome": "^1.9.4",
     "@changesets/cli": "^2.27.12",
