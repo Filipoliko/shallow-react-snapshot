@@ -1,5 +1,9 @@
 # Shallow React Snapshot
 
+[![CI](https://github.com/Filipoliko/shallow-react-snapshot/actions/workflows/test.yml/badge.svg)](https://github.com/Filipoliko/shallow-react-snapshot/actions/workflows/test.yml)
+[![NPM Version](https://img.shields.io/npm/v/shallow-react-snapshot)](https://www.npmjs.com/package/shallow-react-snapshot)
+
+
 Are you tired of the deep HTML structures in your React Testing Library snapshot tests? Do you want to see only the shallow structure of your components, just like with Enzyme shallow rendering? Shallow React Snapshot is here to help!
 
 **What does this library do?**

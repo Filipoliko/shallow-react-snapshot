@@ -2,7 +2,15 @@
   "name": "shallow-react-snapshot",
   "version": "0.1.5",
   "workspaces": ["dependencies/*", "."],
+  "author": "Filip Šátek <satek.filip@gmail.com>",
+  "license": "MIT",
+  "description": "Enzyme-like shallow snapshots with React Testing Library",
   "keywords": ["shallow", "react", "snapshot", "testing", "jest", "enzyme"],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Filipoliko/shallow-react-snapshot.git"
+  },
+  "bugs": "https://github.com/Filipoliko/shallow-react-snapshot/issues",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
   "scripts": {
@@ -15,9 +23,6 @@
     "test": "jest",
     "release": "npm run build && changeset publish"
   },
-  "author": "Filip Šátek <satek.filip@gmail.com>",
-  "license": "MIT",
-  "description": "Enzyme-like shallow snapshots with React Testing Library",
   "devDependencies": {
     "@biomejs/biome": "^1.9.4",
     "@changesets/cli": "^2.27.12",
@@ -32,5 +37,8 @@
     "prettier": "3.4.2",
     "ts-jest": "^29.2.5",
     "typescript": "^5.7.3"
+  },
+  "engines": {
+    "node": ">=18"
   }
 }
