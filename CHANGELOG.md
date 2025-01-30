@@ -1,5 +1,11 @@
 # shallow-react-snapshot
 
+## 0.1.7
+
+### Patch Changes
+
+- d209b5f: Cleanup published npm package to contain only runtime files
+
 ## 0.1.6
 
 ### Patch Changes
