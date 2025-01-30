@@ -1,11 +1,21 @@
 {
   "name": "shallow-react-snapshot",
-  "version": "0.1.5",
-  "workspaces": ["dependencies/*", "."],
+  "version": "0.1.6",
+  "workspaces": [
+    "dependencies/*",
+    "."
+  ],
   "author": "Filip Šátek <satek.filip@gmail.com>",
   "license": "MIT",
   "description": "Enzyme-like shallow snapshots with React Testing Library",
-  "keywords": ["shallow", "react", "snapshot", "testing", "jest", "enzyme"],
+  "keywords": [
+    "shallow",
+    "react",
+    "snapshot",
+    "testing",
+    "jest",
+    "enzyme"
+  ],
   "repository": {
     "type": "git",
     "url": "https://github.com/Filipoliko/shallow-react-snapshot.git"
