@@ -28,55 +28,87 @@ This library officially supports React 16 and newer.
 
 ## Usage
 
+```typescript
+function shallow(rootElement: Element | null, RootReactComponent: ReactComponent | string): ReactTestChild | null
+```
+
+- `rootElement` - The root element of the rendered component. Typically `container` from `render` function of React Testing Library.
+- `RootReactComponent` - Most likely the component you are testing. It can be a React component or its name as a string.
+- Returns snapshot friendly shallow structure of the component.
+
+**Example**
+
 ```javascript
 import { shallow } from "shallow-react-snapshot";
 import { render } from "@testing-library/react";
 
 function MyComponent() {
   return (
-    <div>
-      <MyNestedComponent data-testid="nested">
-        <span>Text</span>
-      </MyNestedComponent>
-    </div>
+    <MyNestedComponent data-testid="nested">
+      <span>Text</span>
+    </MyNestedComponent>
   );
 }
 
 function MyNestedComponent({ children, ...props }) {
-  return (
-    <div>
-      <div>
-        <div>
-          <div {...props}>{children || null}</div>
-        </div>
-      </div>
-    </div>
-  );
+  return <div {...props}>{children || null}</div>;
 }
 
-test("Render", () => {
+test("Render MyComponent", () => {
   const { container } = render(<MyComponent />);
 
-  expect(shallow(container.firstChild, MyComponent)).toMatchSnapshot();
+
+  // Typical use-case
+  expect(shallow(container, MyComponent)).toMatchSnapshot();
+  // You can also use the string representation of the component to get the same result
+  expect(shallow(container, "MyComponent")).toMatchSnapshot();
+
+  // Result:
+  // <MyNestedComponent
+  //   data-testid="nested"
+  // >
+  //   <span>
+  //     Text
+  //   </span>
+  // </MyNestedComponent>
 });
 ```
 
-This results in following jest snapshot.
+### HOC Components
 
-```
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+When you are testing components with higher-order components (HOC), you might run into some issues. The snapshot of the rendered component will contain the HOC component, which is probably not what you want to test. You want to test the original component without the HOC. With Enzyme shallow, this would not be possible, but with Shallow React Snapshot, you can easily achieve this.
 
-exports[`Render 1`] = `
-<div>
-  <MyNestedComponent
-    data-testid="nested"
-  >
-    <span>
-      Text
-    </span>
-  </MyNestedComponent>
-</div>
-`;
+```javascript
+function withHOC(Component) {
+  return function HOC(props) {
+    return <Component {...props} />;
+  };
+}
+
+test("Render MyComponentWithHOC", () => {
+  const MyComponentWithHOC = withHOC(MyComponent);
+  const { container } = render(<MyComponentWithHOC />);
+
+  // This might not be what you want to test
+  expect(shallow(container, MyComponentWithHOC)).toMatchSnapshot(); // Wrong!
+  // Result:
+  // <MyComponent />
+
+  // You probably want to check the insides of the original component without HOC
+  // You can either pass the original component into shallow
+  expect(shallow(container, MyComponent)).toMatchSnapshot();
+  // Or you can use the string representation of the component if you don't have the reference to the original component
+  expect(shallow(container, "MyComponent")).toMatchSnapshot();
+
+  // Result:
+  // <MyNestedComponent
+  //   data-testid="nested"
+  // >
+  //   <span>
+  //     Text
+  //   </span>
+  // </MyNestedComponent>
+});
 ```
 
 ## Contributing
