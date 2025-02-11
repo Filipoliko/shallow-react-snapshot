@@ -5,10 +5,9 @@ import { render } from "@testing-library/react";
 
 import { shallow } from "../index";
 
-class MyComponent extends Component<{
-  children?: React.ReactNode;
-  [key: string]: any;
-}> {
+class MyComponent extends Component<
+  React.PropsWithChildren<{ something?: string }>
+> {
   render() {
     const { children, ...props } = this.props;
     return (
@@ -19,14 +18,17 @@ class MyComponent extends Component<{
   }
 }
 
-class WrapperAroundMyComponent extends Component<{
-  children?: React.ReactNode;
-  [key: string]: any;
-}> {
+class WrapperAroundMyComponent extends Component<React.PropsWithChildren<{}>> {
   render() {
     const { children, ...props } = this.props;
     return <MyComponent {...props}>{children || null}</MyComponent>;
   }
+}
+
+function withHOC<T>(Component: React.ComponentType<T>) {
+  return function ComponentWithHOC(props: React.PropsWithChildren<T>) {
+    return <Component {...props} />;
+  };
 }
 
 describe("Class component render", () => {
@@ -38,7 +40,29 @@ describe("Class component render", () => {
     }
     const { container } = render(<App />);
 
-    const result = shallow(container.firstChild as HTMLElement, App);
+    const result = shallow(container, App);
+
+    expect(result).toMatchSnapshot();
+  });
+
+  test("HOC component with shallow render of the wrapped component", () => {
+    const MyComponentWithHOC = withHOC(MyComponent);
+    const { container } = render(<MyComponentWithHOC />);
+
+    const result = shallow(container, MyComponent);
+
+    expect(result).toMatchSnapshot();
+  });
+
+  test("react component with string component argument", () => {
+    class App extends Component {
+      render() {
+        return <MyComponent />;
+      }
+    }
+    const { container } = render(<App />);
+
+    const result = shallow(container, "App");
 
     expect(result).toMatchSnapshot();
   });
@@ -55,15 +79,15 @@ describe("Class component render", () => {
     }
     const { container } = render(<App />);
 
-    const result = shallow(container.firstChild as HTMLElement, App);
+    const result = shallow(container, App);
 
     expect(result).toMatchSnapshot();
   });
 
   test("direct wrapper around react component with a single child element and children on second position", () => {
-    class MyComponentWithChildrenOnSecondPosition extends Component<{
-      children?: React.ReactNode;
-    }> {
+    class MyComponentWithChildrenOnSecondPosition extends Component<
+      React.PropsWithChildren<{}>
+    > {
       render() {
         const { children } = this.props;
         return (
@@ -86,7 +110,7 @@ describe("Class component render", () => {
     }
     const { container } = render(<App />);
 
-    const result = shallow(container.firstChild as HTMLElement, App);
+    const result = shallow(container, App);
 
     expect(result).toMatchSnapshot();
   });
@@ -103,7 +127,7 @@ describe("Class component render", () => {
     }
     const { container } = render(<App />);
 
-    const result = shallow(container.firstChild as HTMLElement, App);
+    const result = shallow(container, App);
 
     expect(result).toMatchSnapshot();
   });
@@ -122,7 +146,7 @@ describe("Class component render", () => {
     }
     const { container } = render(<App />);
 
-    const result = shallow(container.firstChild as HTMLElement, App);
+    const result = shallow(container, App);
 
     expect(result).toMatchSnapshot();
   });
@@ -139,7 +163,7 @@ describe("Class component render", () => {
     }
     const { container } = render(<App />);
 
-    const result = shallow(container.firstChild as HTMLElement, App);
+    const result = shallow(container, App);
 
     expect(result).toMatchSnapshot();
   });
@@ -159,7 +183,7 @@ describe("Class component render", () => {
     }
     const { container } = render(<App />);
 
-    const result = shallow(container.firstChild as HTMLElement, App);
+    const result = shallow(container, App);
 
     expect(result).toMatchSnapshot();
   });
@@ -176,7 +200,7 @@ describe("Class component render", () => {
     }
     const { container } = render(<App />);
 
-    const result = shallow(container.firstChild as HTMLElement, App);
+    const result = shallow(container, App);
 
     expect(result).toMatchSnapshot();
   });
@@ -193,7 +217,7 @@ describe("Class component render", () => {
     }
     const { container } = render(<App />);
 
-    const result = shallow(container.firstChild as HTMLElement, App);
+    const result = shallow(container, App);
 
     expect(result).toMatchSnapshot();
   });
@@ -212,7 +236,7 @@ describe("Class component render", () => {
     }
     const { container } = render(<App />);
 
-    const result = shallow(container.firstChild as HTMLElement, App);
+    const result = shallow(container, App);
 
     expect(result).toMatchSnapshot();
   });
@@ -241,7 +265,7 @@ describe("Class component render", () => {
     }
     const { container } = render(<App />);
 
-    const result = shallow(container.firstChild as HTMLElement, App);
+    const result = shallow(container, App);
 
     expect(result).toMatchSnapshot();
   });
@@ -259,7 +283,7 @@ describe("Class component render", () => {
     }
     const { container } = render(<App />);
 
-    const result = shallow(container.firstChild as HTMLElement, App);
+    const result = shallow(container, App);
 
     expect(result).toMatchSnapshot();
   });
@@ -274,7 +298,7 @@ describe("Class component render", () => {
     );
     const { container } = render(<App />);
 
-    const result = shallow(container.firstChild as HTMLElement, App);
+    const result = shallow(container, App);
 
     expect(result).toMatchSnapshot();
   });
@@ -293,7 +317,7 @@ describe("Class component render", () => {
     }
     const { container } = render(<App />);
 
-    const result = shallow(container.firstChild as HTMLElement, App);
+    const result = shallow(container, App);
 
     expect(result).toMatchSnapshot();
   });
@@ -312,7 +336,7 @@ describe("Class component render", () => {
     }
     const { container } = render(<App />);
 
-    const result = shallow(container.firstChild as HTMLElement, App);
+    const result = shallow(container, App);
 
     expect(result).toMatchSnapshot();
   });
@@ -331,7 +355,7 @@ describe("Class component render", () => {
     }
     const { container } = render(<App />);
 
-    const result = shallow(container.firstChild as HTMLElement, App);
+    const result = shallow(container, App);
 
     expect(result).toMatchSnapshot();
   });
@@ -348,7 +372,7 @@ describe("Class component render", () => {
     }
     const { container } = render(<App />);
 
-    const result = shallow(container.firstChild as HTMLElement, App);
+    const result = shallow(container, App);
 
     expect(result).toMatchSnapshot();
   });
@@ -360,10 +384,7 @@ describe("Class component render", () => {
       </WrapperAroundMyComponent>,
     );
 
-    const result = shallow(
-      container.firstChild as HTMLElement,
-      WrapperAroundMyComponent,
-    );
+    const result = shallow(container, WrapperAroundMyComponent);
 
     expect(result).toMatchSnapshot();
   });
@@ -376,10 +397,7 @@ describe("Class component render", () => {
       </WrapperAroundMyComponent>,
     );
 
-    const result = shallow(
-      container.firstChild as HTMLElement,
-      WrapperAroundMyComponent,
-    );
+    const result = shallow(container, WrapperAroundMyComponent);
 
     expect(result).toMatchSnapshot();
   });
@@ -402,10 +420,7 @@ describe("Class component render", () => {
       </WrapperAroundMyComponent>,
     );
 
-    const result = shallow(
-      container.firstChild as HTMLElement,
-      WrapperAroundMyComponent,
-    );
+    const result = shallow(container, WrapperAroundMyComponent);
 
     expect(result).toMatchSnapshot();
   });

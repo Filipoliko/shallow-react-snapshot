@@ -11,7 +11,7 @@ import type {
   ChildrenFiberOrInternalInstance,
   FiberOrInternalInstance,
   ReactComponent,
-  ReactTestObject,
+  ReactTestChild,
 } from "./types";
 
 const testSymbol =
@@ -23,17 +23,20 @@ const testSymbol =
  * Transforms a HTML element into a shallow representation of a React component
  */
 export function shallow(
-  rootElement: HTMLElement | null,
-  RootReactComponent: ReactComponent,
-): ReactTestObject | string | number | null {
+  rootElement: Element | null,
+  RootReactComponent: ReactComponent | string,
+): ReactTestChild | null {
   if (rootElement === null) {
     return null;
   }
 
-  const fiberOrInternalInstance = getFiberOrInternalInstance(rootElement);
+  const fiberOrInternalInstance =
+    getFirstNestedFiberOrInternalInstance(rootElement);
 
   if (!fiberOrInternalInstance) {
-    return null;
+    throw new Error(
+      "Shallow: No React component found in the provided element, or its children. Are you sure there is a React component rendered?",
+    );
   }
 
   const rootReactComponent = getFirstChildOfRootReactComponent(
@@ -45,12 +48,32 @@ export function shallow(
 }
 
 /**
+ * Get first nested React Fiber or InternalInstance from a HTML element
+ */
+function getFirstNestedFiberOrInternalInstance(rootElement: Element) {
+  let current = rootElement;
+  let fiberOrInternalInstance = getFiberOrInternalInstance(current);
+
+  // If the root element is not a React component, then we need to find the first child that is a React component
+  while (!fiberOrInternalInstance && current.firstElementChild) {
+    current = current.firstElementChild;
+    fiberOrInternalInstance = getFiberOrInternalInstance(current);
+  }
+
+  return fiberOrInternalInstance;
+}
+
+/**
  * Transforms React components in filter to their actual components
  * This is needed because React components are sometimes wrapped in React.memo or React.forwardRef
  */
 function transformRootReactComponent(
   RootReactComponent: ReactComponent,
 ): ReactComponent {
+  if (typeof RootReactComponent === "string") {
+    return RootReactComponent;
+  }
+
   if (Memo && RootReactComponent.$$typeof === Memo) {
     return RootReactComponent.type;
   }
@@ -65,21 +88,48 @@ function getFirstChildOfRootReactComponent(
   fiberOrInternalInstance: FiberOrInternalInstance,
   RootReactComponent: ReactComponent,
 ): FiberOrInternalInstance {
+  const componentStorage: string[] = [];
   const TransformedRootReactComponent =
     transformRootReactComponent(RootReactComponent);
   let current = fiberOrInternalInstance;
 
   // Find first component related to our filter
+  // First we check in parent components
   while (
     current.return &&
-    !isParentComponentMatching(current, TransformedRootReactComponent)
+    !isParentComponentMatching(
+      current,
+      TransformedRootReactComponent,
+      componentStorage,
+    )
   ) {
     current = current.return;
   }
 
+  // If there is no matching parent component, then we need to check in children
+  // If a child has a sibling, then it is a hint, that something is wrong and we abort
+  // We could support search in siblings, but I cannot imagine a real-life scenario where it would be useful
+  while (
+    current.child &&
+    !current.child.sibling &&
+    !isParentComponentMatching(
+      current,
+      TransformedRootReactComponent,
+      componentStorage,
+    )
+  ) {
+    current = current.child;
+  }
+
+  // If we didn't find any matching component, then we throw an error
   if (!isParentComponentMatching(current, TransformedRootReactComponent)) {
+    const componentsInfo =
+      componentStorage.length > 0
+        ? `Found components:\n  ${componentStorage.join("\n  ")}`
+        : "No components found in the tree.";
+
     throw new Error(
-      "Shallow: Unable to find root component. This should not happen. Please, report this issue.",
+      `Shallow: None of the rendered components matches the provided RootReactComponent "${getComponentDisplayName(RootReactComponent)}"\n\n${componentsInfo}`,
     );
   }
 
@@ -89,9 +139,7 @@ function getFirstChildOfRootReactComponent(
 /**
  * Get React Fiber or InternalInstance from a HTML element
  */
-function getFiberOrInternalInstance(
-  element: HTMLElement,
-): FiberOrInternalInstance {
+function getFiberOrInternalInstance(element: Element): FiberOrInternalInstance {
   return Object.entries(element).find(
     ([key]) =>
       key.startsWith("__reactFiber$") || // Functional component
@@ -104,7 +152,7 @@ function getFiberOrInternalInstance(
  */
 function renderReactComponentWithChildren(
   reactComponent: FiberOrInternalInstance | string | number,
-): ReactTestObject | string | number {
+): ReactTestChild {
   if (typeof reactComponent !== "object") {
     return reactComponent;
   }
@@ -137,7 +185,7 @@ function renderReactComponentWithChildren(
  */
 function childrenReactComponentToTestObject(
   childrenReactComponent: ChildrenFiberOrInternalInstance | string | number,
-): ReactTestObject | string | number {
+): ReactTestChild {
   if (typeof childrenReactComponent !== "object") {
     return childrenReactComponent;
   }
@@ -206,12 +254,41 @@ function reactComponentToChildren(
 function isParentComponentMatching(
   reactComponent: FiberOrInternalInstance,
   Component: ReactComponent,
+  componentStorage?: string[],
 ): boolean {
   if (!reactComponent.return) {
     return false;
   }
 
-  return reactComponent.return.type === Component;
+  const { type } = reactComponent.return;
+
+  // Not sure if this can happen, but since we are dealing with internal React structures,
+  // it is better to be safe than sorry
+  if (!type) {
+    return false;
+  }
+
+  const displayName = getComponentDisplayName(type);
+
+  // Store component names for debugging purposes and better error messages
+  if (componentStorage && !componentStorage.includes(displayName)) {
+    componentStorage.push(displayName);
+  }
+
+  if (typeof Component === "string") {
+    return displayName === Component;
+  }
+
+  return type === Component;
+}
+
+/**
+ * Get display name of the react component
+ */
+function getComponentDisplayName(type: ReactComponent): string {
+  return typeof type === "string"
+    ? type // native elements
+    : type.displayName || type.name || type.constructor?.name; // functional components || class components
 }
 
 /**
@@ -311,7 +388,7 @@ function getProps(
  */
 function getChildrenFromProps(
   node: ChildrenFiberOrInternalInstance,
-): (string | number | ReactTestObject)[] | null {
+): ReactTestChild[] | null {
   const { children } = node.props || (node.children && node) || {};
 
   if (!children) {

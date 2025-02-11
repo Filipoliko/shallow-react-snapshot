@@ -25,6 +25,7 @@
             "noExplicitAny": "off"
           },
           "complexity": {
+            "noBannedTypes": "off",
             "noUselessFragments": "off"
           }
         }

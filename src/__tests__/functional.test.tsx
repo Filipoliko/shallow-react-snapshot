@@ -8,10 +8,7 @@ import { shallow } from "../index";
 function MyComponent({
   children,
   ...props
-}: {
-  children?: React.ReactNode;
-  [key: string]: any;
-}) {
+}: React.PropsWithChildren<{ something?: string }>) {
   return (
     <div id="MyComponent" {...props}>
       {children || null}
@@ -19,13 +16,7 @@ function MyComponent({
   );
 }
 
-function MyOtherComponent({
-  children,
-  ...props
-}: {
-  children?: React.ReactNode;
-  [key: string]: any;
-}) {
+function MyOtherComponent({ children, ...props }: React.PropsWithChildren<{}>) {
   return (
     <div id="MyOtherComponent" {...props}>
       {children || null}
@@ -36,11 +27,14 @@ function MyOtherComponent({
 function WrapperAroundMyComponent({
   children,
   ...props
-}: {
-  children?: React.ReactNode;
-  [key: string]: any;
-}) {
+}: React.PropsWithChildren<{}>) {
   return <MyComponent {...props}>{children || null}</MyComponent>;
+}
+
+function withHOC<T>(Component: React.ComponentType<T>) {
+  return function ComponentWithHOC(props: React.PropsWithChildren<T>) {
+    return <Component {...props} />;
+  };
 }
 
 describe("Functional component render", () => {
@@ -50,7 +44,41 @@ describe("Functional component render", () => {
     }
     const { container } = render(<App />);
 
-    const result = shallow(container.firstChild as HTMLElement, App);
+    const result = shallow(container, App);
+
+    expect(result).toMatchSnapshot();
+  });
+
+  test("HOC component with shallow render of the wrapped component", () => {
+    const MyComponentWithHOC = withHOC(MyComponent);
+    const { container } = render(<MyComponentWithHOC />);
+
+    const result = shallow(container, MyComponent);
+
+    expect(result).toMatchSnapshot();
+  });
+
+  test("react component with string component argument", () => {
+    function App() {
+      return <MyComponent />;
+    }
+    const { container } = render(<App />);
+
+    const result = shallow(container, "App");
+
+    expect(result).toMatchSnapshot();
+  });
+
+  test("react component with displayName and string component argument", () => {
+    function App() {
+      return <MyComponent />;
+    }
+
+    App.displayName = "AlternativeAppName";
+
+    const { container } = render(<App />);
+
+    const result = shallow(container, "AlternativeAppName");
 
     expect(result).toMatchSnapshot();
   });
@@ -74,7 +102,7 @@ describe("Functional component render", () => {
     }
     const { container } = render(<App />);
 
-    const result = shallow(container.firstChild as HTMLElement, App);
+    const result = shallow(container, App);
 
     expect(result).toMatchSnapshot();
   });
@@ -89,7 +117,7 @@ describe("Functional component render", () => {
     }
     const { container } = render(<App />);
 
-    const result = shallow(container.firstChild as HTMLElement, App);
+    const result = shallow(container, App);
 
     expect(result).toMatchSnapshot();
   });
@@ -116,7 +144,7 @@ describe("Functional component render", () => {
     }
     const { container } = render(<App />);
 
-    const result = shallow(container.firstChild as HTMLElement, App);
+    const result = shallow(container, App);
 
     expect(result).toMatchSnapshot();
   });
@@ -131,7 +159,7 @@ describe("Functional component render", () => {
     }
     const { container } = render(<App />);
 
-    const result = shallow(container.firstChild as HTMLElement, App);
+    const result = shallow(container, App);
 
     expect(result).toMatchSnapshot();
   });
@@ -148,7 +176,7 @@ describe("Functional component render", () => {
     }
     const { container } = render(<App />);
 
-    const result = shallow(container.firstChild as HTMLElement, App);
+    const result = shallow(container, App);
 
     expect(result).toMatchSnapshot();
   });
@@ -163,7 +191,7 @@ describe("Functional component render", () => {
     }
     const { container } = render(<App />);
 
-    const result = shallow(container.firstChild as HTMLElement, App);
+    const result = shallow(container, App);
 
     expect(result).toMatchSnapshot();
   });
@@ -181,7 +209,7 @@ describe("Functional component render", () => {
     }
     const { container } = render(<App />);
 
-    const result = shallow(container.firstChild as HTMLElement, App);
+    const result = shallow(container, App);
 
     expect(result).toMatchSnapshot();
   });
@@ -196,7 +224,7 @@ describe("Functional component render", () => {
     }
     const { container } = render(<App />);
 
-    const result = shallow(container.firstChild as HTMLElement, App);
+    const result = shallow(container, App);
 
     expect(result).toMatchSnapshot();
   });
@@ -211,7 +239,7 @@ describe("Functional component render", () => {
     }
     const { container } = render(<App />);
 
-    const result = shallow(container.firstChild as HTMLElement, App);
+    const result = shallow(container, App);
 
     expect(result).toMatchSnapshot();
   });
@@ -228,7 +256,7 @@ describe("Functional component render", () => {
     }
     const { container } = render(<App />);
 
-    const result = shallow(container.firstChild as HTMLElement, App);
+    const result = shallow(container, App);
 
     expect(result).toMatchSnapshot();
   });
@@ -253,7 +281,7 @@ describe("Functional component render", () => {
     }
     const { container } = render(<App />);
 
-    const result = shallow(container.firstChild as HTMLElement, App);
+    const result = shallow(container, App);
 
     expect(result).toMatchSnapshot();
   });
@@ -269,7 +297,7 @@ describe("Functional component render", () => {
     }
     const { container } = render(<App />);
 
-    const result = shallow(container.firstChild as HTMLElement, App);
+    const result = shallow(container, App);
 
     expect(result).toMatchSnapshot();
   });
@@ -280,7 +308,7 @@ describe("Functional component render", () => {
     });
     const { container } = render(<App />);
 
-    const result = shallow(container.firstChild as HTMLElement, App);
+    const result = shallow(container, App);
 
     expect(result).toMatchSnapshot();
   });
@@ -291,7 +319,7 @@ describe("Functional component render", () => {
     });
     const { container } = render(<App />);
 
-    const result = shallow(container.firstChild as HTMLElement, App);
+    const result = shallow(container, App);
 
     expect(result).toMatchSnapshot();
   });
@@ -316,7 +344,7 @@ describe("Functional component render", () => {
     }
     const { container } = render(<App />);
 
-    const result = shallow(container.firstChild as HTMLElement, App);
+    const result = shallow(container, App);
 
     expect(result).toMatchSnapshot();
   });
@@ -333,7 +361,7 @@ describe("Functional component render", () => {
     }
     const { container } = render(<App />);
 
-    const result = shallow(container.firstChild as HTMLElement, App);
+    const result = shallow(container, App);
 
     expect(result).toMatchSnapshot();
   });
@@ -350,7 +378,7 @@ describe("Functional component render", () => {
     }
     const { container } = render(<App />);
 
-    const result = shallow(container.firstChild as HTMLElement, App);
+    const result = shallow(container, App);
 
     expect(result).toMatchSnapshot();
   });
@@ -367,7 +395,7 @@ describe("Functional component render", () => {
     }
     const { container } = render(<App />);
 
-    const result = shallow(container.firstChild as HTMLElement, App);
+    const result = shallow(container, App);
 
     expect(result).toMatchSnapshot();
   });
@@ -382,7 +410,7 @@ describe("Functional component render", () => {
     }
     const { container } = render(<App />);
 
-    const result = shallow(container.firstChild as HTMLElement, App);
+    const result = shallow(container, App);
 
     expect(result).toMatchSnapshot();
   });
@@ -394,10 +422,7 @@ describe("Functional component render", () => {
       </WrapperAroundMyComponent>,
     );
 
-    const result = shallow(
-      container.firstChild as HTMLElement,
-      WrapperAroundMyComponent,
-    );
+    const result = shallow(container, WrapperAroundMyComponent);
 
     expect(result).toMatchSnapshot();
   });
@@ -410,10 +435,7 @@ describe("Functional component render", () => {
       </WrapperAroundMyComponent>,
     );
 
-    const result = shallow(
-      container.firstChild as HTMLElement,
-      WrapperAroundMyComponent,
-    );
+    const result = shallow(container, WrapperAroundMyComponent);
 
     expect(result).toMatchSnapshot();
   });
@@ -427,10 +449,7 @@ describe("Functional component render", () => {
       </WrapperAroundMyComponent>,
     );
 
-    const result = shallow(
-      container.firstChild as HTMLElement,
-      WrapperAroundMyComponent,
-    );
+    const result = shallow(container, WrapperAroundMyComponent);
 
     expect(result).toMatchSnapshot();
   });
@@ -453,10 +472,7 @@ describe("Functional component render", () => {
       </WrapperAroundMyComponent>,
     );
 
-    const result = shallow(
-      container.firstChild as HTMLElement,
-      WrapperAroundMyComponent,
-    );
+    const result = shallow(container, WrapperAroundMyComponent);
 
     expect(result).toMatchSnapshot();
   });

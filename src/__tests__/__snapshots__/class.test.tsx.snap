@@ -1,5 +1,11 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`Class component render HOC component with shallow render of the wrapped component 1`] = `
+<div
+  id="MyComponent"
+/>
+`;
+
 exports[`Class component render direct StrictMode wrapper around react component with a single child element 1`] = `
 <StrictMode>
   <MyComponent>
@@ -148,6 +154,8 @@ exports[`Class component render react component with portal 1`] = `
   </Portal>
 </MyComponent>
 `;
+
+exports[`Class component render react component with string component argument 1`] = `<MyComponent />`;
 
 exports[`Class component render react component with with another react component and native component as a child 1`] = `
 <MyComponent>
