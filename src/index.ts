@@ -389,13 +389,15 @@ function getProps(
 function getChildrenFromProps(
   node: ChildrenFiberOrInternalInstance,
 ): ReactTestChild[] | null {
-  const { children } = node.props || (node.children && node) || {};
+  const { children } = node.props || node;
 
   if (!children) {
     return null;
   }
 
-  const arrayOfChildren = Array.isArray(children) ? children : [children];
+  const arrayOfChildren = flattenNestedArrays(
+    Array.isArray(children) ? children : [children],
+  ) as ChildrenFiberOrInternalInstance[];
 
   return arrayOfChildren.filter(reactFalsyValuesFilter).map((child) => {
     // If child is any non-object value (number, string), return it as is
@@ -410,6 +412,20 @@ function getChildrenFromProps(
       children: getChildrenFromProps(child),
     };
   });
+}
+
+/**
+ * Convert structures like `[<div />, <div />, [<div />, [<div />, <div />]]]` to `[<div />, <div />, <div />, <div />, <div />]`
+ */
+// biome-ignore lint/suspicious/noExplicitAny: We are very generic here, you can really pass anything
+function flattenNestedArrays(array: any[]): any[] {
+  return array.reduce((acc, value) => {
+    if (Array.isArray(value)) {
+      return acc.concat(flattenNestedArrays(value));
+    }
+
+    return acc.concat(value);
+  }, []);
 }
 
 /**

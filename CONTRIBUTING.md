@@ -10,6 +10,16 @@ To run all tests, use `npm test`. This will execute tests for all supported reac
 
 To run tests only for a single react version, use `npm test -- --selectProjects react-16`.
 
+## Link
+
+You can link the package to your project by running `npm link && npm run dev` in the `shallow-react-snapshot` project and `npm link shallow-react-snapshot` in your project. The `npm run dev` will watch for changes in the `shallow-react-snapshot` project and rebuild the package.
+
+## Playground
+
+When investigating react internals, it is often helpful to have a playground to test things out and check them directly in the browser.
+
+Run `npm run playground` to open a server with a simple react component (you will be able to select the version). You can edit the rendered react component in `playground/main.jsx` file if you want to simulate a specific scenario.
+
 ## Codestyle
 
 We are using [biome](https://biomejs.dev) for code formatting and linting.

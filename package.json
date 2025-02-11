@@ -25,6 +25,7 @@
   "types": "./dist/index.d.ts",
   "scripts": {
     "build": "tsc -p tsconfig.build.json",
+    "dev": "npm run build -- --watch",
     "changeset": "changeset",
     "lint": "npx @biomejs/biome check .",
     "lint:fix": "npm run lint -- --write",
