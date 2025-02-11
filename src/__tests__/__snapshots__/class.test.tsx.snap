@@ -128,6 +128,16 @@ exports[`Class component render react component with another react component as 
 </MyComponent>
 `;
 
+exports[`Class component render react component with array of children and component sibling 1`] = `
+<div>
+  <div />
+  <div />
+  <div />
+  <div />
+  <div />
+</div>
+`;
+
 exports[`Class component render react component with deeply nested multiple react components as a child 1`] = `
 <MyComponent>
   <WrapperAroundMyComponent>

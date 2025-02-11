@@ -163,6 +163,16 @@ exports[`Functional component render react component with another whitelisted re
 </MyComponent>
 `;
 
+exports[`Functional component render react component with array of children and component sibling 1`] = `
+<div>
+  <div />
+  <div />
+  <div />
+  <div />
+  <div />
+</div>
+`;
+
 exports[`Functional component render react component with deeply nested multiple react components as a child 1`] = `
 <MyComponent>
   <WrapperAroundMyComponent>

@@ -424,4 +424,26 @@ describe("Class component render", () => {
 
     expect(result).toMatchSnapshot();
   });
+
+  test("react component with array of children and component sibling", () => {
+    class App extends Component {
+      render() {
+        return (
+          <div>
+            {[
+              <div key={0} />,
+              <div key={1} />,
+              [<div key={2} />, [<div key={3} />]],
+            ]}
+            <div />
+          </div>
+        );
+      }
+    }
+    const { container } = render(<App />);
+
+    const result = shallow(container, App);
+
+    expect(result).toMatchSnapshot();
+  });
 });
