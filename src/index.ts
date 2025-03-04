@@ -102,7 +102,7 @@ function findCurrentlyRenderedState(
  * Checks if the node state definitions are specific for class components
  */
 function isClassComponentState(node: FiberOrInternalInstance): boolean {
-  return node.updateQueue !== null;
+  return !!node.updateQueue;
 }
 
 /**

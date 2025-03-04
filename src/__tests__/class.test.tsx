@@ -454,7 +454,7 @@ describe("Class component render", () => {
   });
 
   // Do you wonder why there are 4 tests calling useState different amount of times?
-  // This library is rendering everythign based on `memoizedProps`, which are not
+  // This library is rendering everything based on `memoizedProps`, which are not
   // always getting updated on the first react node we encounter. But it will get
   // updated second time, but not third time, and so on. I am not really sure when
   // it gets updated, so that's why we better test it.
