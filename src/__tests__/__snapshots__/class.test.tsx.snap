@@ -165,6 +165,46 @@ exports[`Class component render react component with portal 1`] = `
 </MyComponent>
 `;
 
+exports[`Class component render react component with state changed 0 times 1`] = `
+<MyComponent
+  data-testid={0}
+>
+  <h1>
+    Hello World One
+  </h1>
+</MyComponent>
+`;
+
+exports[`Class component render react component with state changed 1 times 1`] = `
+<MyComponent
+  data-testid={1}
+>
+  <h1>
+    Hello World One
+  </h1>
+</MyComponent>
+`;
+
+exports[`Class component render react component with state changed 2 times 1`] = `
+<MyComponent
+  data-testid={2}
+>
+  <h1>
+    Hello World One
+  </h1>
+</MyComponent>
+`;
+
+exports[`Class component render react component with state changed 3 times 1`] = `
+<MyComponent
+  data-testid={3}
+>
+  <h1>
+    Hello World One
+  </h1>
+</MyComponent>
+`;
+
 exports[`Class component render react component with string component argument 1`] = `<MyComponent />`;
 
 exports[`Class component render react component with with another react component and native component as a child 1`] = `
