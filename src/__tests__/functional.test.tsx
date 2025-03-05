@@ -1,14 +1,14 @@
 import React from "react";
 import { createPortal } from "react-dom";
 
-import { render } from "@testing-library/react";
+import { act, render } from "@testing-library/react";
 
 import { shallow } from "../index";
 
 function MyComponent({
   children,
   ...props
-}: React.PropsWithChildren<{ something?: string }>) {
+}: React.PropsWithChildren<{ something?: string | number }>) {
   return (
     <div id="MyComponent" {...props}>
       {children || null}
@@ -496,4 +496,40 @@ describe("Functional component render", () => {
 
     expect(result).toMatchSnapshot();
   });
+
+  // Do you wonder why there are 4 tests calling useState different amount of times?
+  // This library is rendering everything based on `memoizedProps`, which are not
+  // always getting updated on the first react node we encounter. But it will get
+  // updated second time, but not third time, and so on. I am not really sure when
+  // it gets updated, so that's why we better test it.
+  for (let n = 0; n < 4; n++) {
+    test(`react component with state changed ${n} times`, async () => {
+      let testSetState = (x: any) => x;
+      function App() {
+        const [state, setState] = React.useState(0);
+        testSetState = setState;
+        return (
+          <MyComponent data-testid={state}>
+            <h1>Hello World One</h1>
+          </MyComponent>
+        );
+      }
+
+      const { container, findByTestId } = render(<App />);
+
+      for (let i = 0; i < n; i++) {
+        const action = act(() => testSetState(i + 1));
+
+        if (Number(React.version.split(".")[0]) > 17) {
+          await action;
+        }
+
+        await findByTestId(i + 1);
+      }
+
+      const result = shallow(container, App);
+
+      expect(result).toMatchSnapshot();
+    });
+  }
 });

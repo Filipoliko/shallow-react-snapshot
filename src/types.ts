@@ -12,6 +12,13 @@ export type ReactTestChild = ReactTestObject | string | number;
 // This can be any kind of react component (class, functional, memo, forwardRef, fragment, etc.)
 // biome-ignore lint/suspicious/noExplicitAny: No typing available from 3rd party library
 export type ReactComponent = any;
+export type MemoizedState = {
+  // These types are here only for functional components
+  memoizedState?: number;
+  queue?: {
+    lastRenderedState: number;
+  };
+};
 
 export interface FiberOrInternalInstance {
   // biome-ignore lint/suspicious/noExplicitAny: No typing available from 3rd party library
@@ -19,9 +26,20 @@ export interface FiberOrInternalInstance {
   // biome-ignore lint/suspicious/noExplicitAny: No typing available from 3rd party library
   elementType?: any;
   memoizedProps: Record<string, unknown>;
+  memoizedState: MemoizedState;
+  updateQueue?: {
+    // Class components only
+    // biome-ignore lint/suspicious/noExplicitAny: No typing available from 3rd party library
+    baseState: any;
+    // biome-ignore lint/suspicious/noExplicitAny: No typing available from 3rd party library
+    baseQueue: any; // Only React 16
+    // biome-ignore lint/suspicious/noExplicitAny: No typing available from 3rd party library
+    lastBaseUpdate: any; // Only React 17+
+  };
   child: FiberOrInternalInstance | null;
   sibling: FiberOrInternalInstance | null;
   return: FiberOrInternalInstance | null;
+  alternate: FiberOrInternalInstance | null;
   _debugOwner: FiberOrInternalInstance;
 }
 

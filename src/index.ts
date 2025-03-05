@@ -39,12 +39,107 @@ export function shallow(
     );
   }
 
-  const rootReactComponent = getFirstChildOfRootReactComponent(
+  let rootReactComponent = getFirstChildOfRootReactComponent(
     fiberOrInternalInstance,
     RootReactComponent,
   );
 
+  // If the root component is using state, then the props that we are seeing might not be up-to-date
+  if (rootReactComponent.return?.memoizedState) {
+    const rootReactComponentCandidate = findCurrentlyRenderedState(
+      rootReactComponent.return,
+    ).child;
+
+    if (!rootReactComponentCandidate) {
+      throw new Error(
+        "Shallow: Unable to find the currently rendered state. This should not happen. Please, report this issue.",
+      );
+    }
+
+    rootReactComponent = rootReactComponentCandidate;
+  }
+
   return renderReactComponentWithChildren(rootReactComponent);
+}
+
+/**
+ * Search through alternate versions of current node to find the currently rendered state
+ */
+function findCurrentlyRenderedState(
+  node: FiberOrInternalInstance,
+  history: FiberOrInternalInstance[] = [],
+): FiberOrInternalInstance {
+  let current = node;
+
+  const isLastRenderedState = isClassComponentState(current)
+    ? isLastRenderedStateClassComponent
+    : isLastRenderedStateFunctionalComponent;
+
+  while (!isLastRenderedState(current)) {
+    // There should always be an alternate component
+    if (!current.alternate) {
+      throw new Error(
+        "Shallow: Unable to find the currently rendered state. There is no alternate component. This should not happen. Please, report this issue.",
+      );
+    }
+
+    // This is here just to make sure we don't end up in an infinite loop
+    if (history.includes(current)) {
+      throw new Error(
+        "Shallow: Unable to find the currently rendered state. There is a circular reference. This should not happen. Please, report this issue.",
+      );
+    }
+
+    history.push(current);
+
+    current = current.alternate;
+  }
+
+  return current;
+}
+
+/**
+ * Checks if the node state definitions are specific for class components
+ */
+function isClassComponentState(node: FiberOrInternalInstance): boolean {
+  return !!node.updateQueue;
+}
+
+/**
+ * Checks if the node state is the last rendered state (works for functional components)
+ */
+function isLastRenderedStateFunctionalComponent(
+  node: FiberOrInternalInstance,
+): boolean {
+  // There is no queue, which means it is the last rendered state
+  if (!node.memoizedState.queue) {
+    return true;
+  }
+
+  return (
+    node.memoizedState.memoizedState ===
+    node.memoizedState.queue.lastRenderedState
+  );
+}
+
+/**
+ * Checks if the node state is the last rendered state (works for class components)
+ */
+function isLastRenderedStateClassComponent(
+  node: FiberOrInternalInstance,
+): boolean {
+  // There is no queue, which means it is the last rendered state
+  if (!node.updateQueue) {
+    return true;
+  }
+
+  // React 16
+  if (node.updateQueue.lastBaseUpdate === undefined) {
+    return node.updateQueue.baseQueue === null;
+  }
+
+  // React 17+
+  return node.updateQueue.lastBaseUpdate === null;
 }
 
 /**
