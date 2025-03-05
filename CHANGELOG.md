@@ -1,5 +1,11 @@
 # shallow-react-snapshot
 
+## 0.2.1
+
+### Patch Changes
+
+- 54b8ef9: State updates in component are now propagated into the shallow results. Until now, it would propagateonly every other state update. This can change some test results, but it is a correction, so you should be able to just update your snapshot tests.
+
 ## 0.2.0
 
 ### Minor Changes
