@@ -30,6 +30,12 @@ export function shallow(
     return null;
   }
 
+  if (!RootReactComponent) {
+    throw new Error(
+      "Shallow: Expected syntax 'shallow(container, RootReactComponent)'. Did you forget to provide RootReactComponent? This is usually the same component that you are testing. See the documentation for more information.",
+    );
+  }
+
   const fiberOrInternalInstance =
     getFirstNestedFiberOrInternalInstance(rootElement);
 
