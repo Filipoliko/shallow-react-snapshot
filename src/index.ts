@@ -102,7 +102,7 @@ function findCurrentlyRenderedState(
  * Checks if the node state definitions are specific for class components
  */
 function isClassComponentState(node: FiberOrInternalInstance): boolean {
-  return !!node.updateQueue;
+  return !node._debugHookTypes; // Debug hook types are available only in functional components
 }
 
 /**
