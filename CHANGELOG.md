@@ -1,5 +1,12 @@
 # shallow-react-snapshot
 
+## 0.2.2
+
+### Patch Changes
+
+- fbdcc8f: Provide more user-friendly error message if the second argument in `shallow` is missing.
+- 319ea1f: Fix error when calling shallow on components, that are using `useEffect` and other React hooks. Resolves #9
+
 ## 0.2.1
 
 ### Patch Changes
