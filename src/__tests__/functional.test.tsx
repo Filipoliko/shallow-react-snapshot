@@ -531,5 +531,327 @@ describe("Functional component render", () => {
 
       expect(result).toMatchSnapshot();
     });
+
+    // @FIXME: This test works only with React 19, but current test infrastructure does not let us test it
+    // only in one version of React.
+    // test(`react component with useActionState changed ${n} times`, async () => {
+    //   let testSetActionState = () => {};
+    //   function App() {
+    //     const [state, setActionState] = React.useActionState(x => x + 1, 0);
+    //     testSetActionState = setActionState;
+    //     return (
+    //       <MyComponent data-testid={state}>
+    //         <h1>Hello World One</h1>
+    //       </MyComponent>
+    //     );
+    //   }
+
+    //   const { container, findByTestId } = render(<App />);
+
+    //   for (let i = 0; i < n; i++) {
+    //     const action = act(() => testSetActionState());
+
+    //     if (Number(React.version.split(".")[0]) > 17) {
+    //       await action;
+    //     }
+
+    //     await findByTestId(i + 1);
+    //   }
+
+    //   const result = shallow(container, App);
+
+    //   expect(result).toMatchSnapshot();
+    // });
+
+    test(`react component with useReducer changed ${n} times`, async () => {
+      const reducer = (state: number, action: number) => action;
+      let testSetReducerState = (x: any) => x;
+      function App() {
+        const [state, setReducerState] = React.useReducer(reducer, 0);
+        testSetReducerState = setReducerState;
+        return (
+          <MyComponent data-testid={state}>
+            <h1>Hello World One</h1>
+          </MyComponent>
+        );
+      }
+
+      const { container, findByTestId } = render(<App />);
+
+      for (let i = 0; i < n; i++) {
+        const action = act(() => testSetReducerState(i + 1));
+
+        if (Number(React.version.split(".")[0]) > 17) {
+          await action;
+        }
+
+        await findByTestId(i + 1);
+      }
+
+      const result = shallow(container, App);
+
+      expect(result).toMatchSnapshot();
+    });
+
+    test(`react component with useEffect and state changed ${n} times`, async () => {
+      let testSetState = (x: any) => x;
+      function App() {
+        const [state, setState] = React.useState(0);
+        testSetState = setState;
+        React.useEffect(() => {
+          // Nothing to do here
+        }, []);
+
+        return (
+          <MyComponent data-testid={state}>
+            <h1>Hello World One</h1>
+          </MyComponent>
+        );
+      }
+
+      const { container, findByTestId } = render(<App />);
+
+      for (let i = 0; i < n; i++) {
+        const action = act(() => testSetState(i + 1));
+
+        if (Number(React.version.split(".")[0]) > 17) {
+          await action;
+        }
+
+        await findByTestId(i + 1);
+      }
+
+      const result = shallow(container, App);
+
+      expect(result).toMatchSnapshot();
+    });
+
+    // @FIXME: This test works only with React 18+, but current test infrastructure does not let us test it
+    // only in one version of React.
+    // test(`react component with useTransition and state changed ${n} times`, async () => {
+    //   let testSetState = (x: any) => x;
+    //   function App() {
+    //     const [isPending, startTransition] = React.useTransition();
+    //     const [state, setState] = React.useState(0);
+    //     testSetState = (x) => {
+    //       startTransition(() => {
+    //         setState(x);
+    //       });
+    //     };
+
+    //     return (
+    //       <MyComponent data-testid={state}>
+    //         <h1>Hello World One</h1>
+    //       </MyComponent>
+    //     );
+    //   }
+
+    //   const { container, findByTestId } = render(<App />);
+
+    //   for (let i = 0; i < n; i++) {
+    //     const action = act(() => testSetState(i + 1));
+
+    //     if (Number(React.version.split(".")[0]) > 17) {
+    //       await action;
+    //     }
+
+    //     await findByTestId(i + 1);
+    //   }
+
+    //   const result = shallow(container, App);
+
+    //   expect(result).toMatchSnapshot();
+    // });
   }
+
+  test("react component with useEffect", async () => {
+    function App() {
+      React.useEffect(() => {
+        // Nothing to do here
+      }, []);
+
+      return (
+        <MyComponent>
+          <h1>Hello World One</h1>
+        </MyComponent>
+      );
+    }
+
+    const { container } = render(<App />);
+
+    const result = shallow(container, App);
+
+    expect(result).toMatchSnapshot();
+  });
+
+  test("react component with useCallback", async () => {
+    function App() {
+      React.useCallback(() => {
+        // Nothing to do here
+      }, []);
+
+      return (
+        <MyComponent>
+          <h1>Hello World One</h1>
+        </MyComponent>
+      );
+    }
+
+    const { container } = render(<App />);
+
+    const result = shallow(container, App);
+
+    expect(result).toMatchSnapshot();
+  });
+
+  test("react component with useContext", async () => {
+    const context = React.createContext({ textContent: "Hello World" });
+    function App() {
+      const { textContent } = React.useContext(context);
+
+      return (
+        <MyComponent>
+          <h1>{textContent}</h1>
+        </MyComponent>
+      );
+    }
+
+    const { container } = render(<App />);
+
+    const result = shallow(container, App);
+
+    expect(result).toMatchSnapshot();
+  });
+
+  test("react component with useDebugValue", async () => {
+    function App() {
+      React.useDebugValue("Debugging value");
+
+      return (
+        <MyComponent>
+          <h1>Hello World One</h1>
+        </MyComponent>
+      );
+    }
+
+    const { container } = render(<App />);
+
+    const result = shallow(container, App);
+
+    expect(result).toMatchSnapshot();
+  });
+
+  // @FIXME: This test works only with React 18+, but current test infrastructure does not let us test it
+  // only in one version of React.
+  // test(`react component with useDeferredValue`, async () => {
+  //   function App() {
+  //     const deferredQuery = React.useDeferredValue('Hello World', 'This text should not be rendered!');
+
+  //     return (
+  //       <MyComponent>
+  //         <h1>{deferredQuery}</h1>
+  //       </MyComponent>
+  //     );
+  //   }
+
+  //   const { container } = render(<App />);
+
+  //   const result = shallow(container, App);
+
+  //   expect(result).toMatchSnapshot();
+  // });
+
+  // @FIXME: This test works only with React 18+, but current test infrastructure does not let us test it
+  // only in one version of React.
+  // test(`react component with useId`, async () => {
+  //   function App() {
+  //     const uid = React.useId();
+
+  //     return (
+  //       <MyComponent>
+  //         <h1>Hello World {typeof uid}</h1>
+  //       </MyComponent>
+  //     );
+  //   }
+
+  //   const { container } = render(<App />);
+
+  //   const result = shallow(container, App);
+
+  //   expect(result).toMatchSnapshot();
+  // });
+
+  // @FIXME: This test works only with React 18+, but current test infrastructure does not let us test it
+  // only in one version of React.
+  // test(`react component with useInsertionEffect`, async () => {
+  //   function App() {
+  //     React.useInsertionEffect(() => {});
+
+  //     return (
+  //       <MyComponent>
+  //         <h1>Hello World One</h1>
+  //       </MyComponent>
+  //     );
+  //   }
+
+  //   const { container } = render(<App />);
+
+  //   const result = shallow(container, App);
+
+  //   expect(result).toMatchSnapshot();
+  // });
+
+  test("react component with useLayoutEffect", async () => {
+    function App() {
+      React.useLayoutEffect(() => {});
+
+      return (
+        <MyComponent>
+          <h1>Hello World One</h1>
+        </MyComponent>
+      );
+    }
+
+    const { container } = render(<App />);
+
+    const result = shallow(container, App);
+
+    expect(result).toMatchSnapshot();
+  });
+
+  test("react component with useMemo", async () => {
+    function App() {
+      const textContent = React.useMemo(() => "Hello World", []);
+
+      return (
+        <MyComponent>
+          <h1>{textContent}</h1>
+        </MyComponent>
+      );
+    }
+
+    const { container } = render(<App />);
+
+    const result = shallow(container, App);
+
+    expect(result).toMatchSnapshot();
+  });
+
+  test("react component with useRef", async () => {
+    function App() {
+      React.useRef(0);
+
+      return (
+        <MyComponent>
+          <h1>Hello World One</h1>
+        </MyComponent>
+      );
+    }
+
+    const { container } = render(<App />);
+
+    const result = shallow(container, App);
+
+    expect(result).toMatchSnapshot();
+  });
 });

@@ -41,6 +41,7 @@ export interface FiberOrInternalInstance {
   return: FiberOrInternalInstance | null;
   alternate: FiberOrInternalInstance | null;
   _debugOwner: FiberOrInternalInstance;
+  _debugHookTypes: string[] | null;
 }
 
 export interface ChildrenFiberOrInternalInstance {

@@ -244,6 +244,142 @@ exports[`Functional component render react component with state changed 3 times 
 
 exports[`Functional component render react component with string component argument 1`] = `<MyComponent />`;
 
+exports[`Functional component render react component with useCallback 1`] = `
+<MyComponent>
+  <h1>
+    Hello World One
+  </h1>
+</MyComponent>
+`;
+
+exports[`Functional component render react component with useContext 1`] = `
+<MyComponent>
+  <h1>
+    Hello World
+  </h1>
+</MyComponent>
+`;
+
+exports[`Functional component render react component with useDebugValue 1`] = `
+<MyComponent>
+  <h1>
+    Hello World One
+  </h1>
+</MyComponent>
+`;
+
+exports[`Functional component render react component with useEffect 1`] = `
+<MyComponent>
+  <h1>
+    Hello World One
+  </h1>
+</MyComponent>
+`;
+
+exports[`Functional component render react component with useEffect and state changed 0 times 1`] = `
+<MyComponent
+  data-testid={0}
+>
+  <h1>
+    Hello World One
+  </h1>
+</MyComponent>
+`;
+
+exports[`Functional component render react component with useEffect and state changed 1 times 1`] = `
+<MyComponent
+  data-testid={1}
+>
+  <h1>
+    Hello World One
+  </h1>
+</MyComponent>
+`;
+
+exports[`Functional component render react component with useEffect and state changed 2 times 1`] = `
+<MyComponent
+  data-testid={2}
+>
+  <h1>
+    Hello World One
+  </h1>
+</MyComponent>
+`;
+
+exports[`Functional component render react component with useEffect and state changed 3 times 1`] = `
+<MyComponent
+  data-testid={3}
+>
+  <h1>
+    Hello World One
+  </h1>
+</MyComponent>
+`;
+
+exports[`Functional component render react component with useLayoutEffect 1`] = `
+<MyComponent>
+  <h1>
+    Hello World One
+  </h1>
+</MyComponent>
+`;
+
+exports[`Functional component render react component with useMemo 1`] = `
+<MyComponent>
+  <h1>
+    Hello World
+  </h1>
+</MyComponent>
+`;
+
+exports[`Functional component render react component with useReducer changed 0 times 1`] = `
+<MyComponent
+  data-testid={0}
+>
+  <h1>
+    Hello World One
+  </h1>
+</MyComponent>
+`;
+
+exports[`Functional component render react component with useReducer changed 1 times 1`] = `
+<MyComponent
+  data-testid={1}
+>
+  <h1>
+    Hello World One
+  </h1>
+</MyComponent>
+`;
+
+exports[`Functional component render react component with useReducer changed 2 times 1`] = `
+<MyComponent
+  data-testid={2}
+>
+  <h1>
+    Hello World One
+  </h1>
+</MyComponent>
+`;
+
+exports[`Functional component render react component with useReducer changed 3 times 1`] = `
+<MyComponent
+  data-testid={3}
+>
+  <h1>
+    Hello World One
+  </h1>
+</MyComponent>
+`;
+
+exports[`Functional component render react component with useRef 1`] = `
+<MyComponent>
+  <h1>
+    Hello World One
+  </h1>
+</MyComponent>
+`;
+
 exports[`Functional component render wrapped in React.forwardRef 1`] = `
 <MyComponent>
   Hello World One
