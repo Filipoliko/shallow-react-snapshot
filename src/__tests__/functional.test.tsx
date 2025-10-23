@@ -1,7 +1,6 @@
+import { act, render } from "@testing-library/react";
 import React from "react";
 import { createPortal } from "react-dom";
-
-import { act, render } from "@testing-library/react";
 
 import { shallow } from "../index";
 
@@ -564,7 +563,7 @@ describe("Functional component render", () => {
     // });
 
     test(`react component with useReducer changed ${n} times`, async () => {
-      const reducer = (state: number, action: number) => action;
+      const reducer = (_state: number, action: number) => action;
       let testSetReducerState = (x: any) => x;
       function App() {
         const [state, setReducerState] = React.useReducer(reducer, 0);

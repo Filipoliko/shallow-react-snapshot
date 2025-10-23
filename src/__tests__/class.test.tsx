@@ -1,7 +1,6 @@
+import { act, render } from "@testing-library/react";
 import React, { Component } from "react";
 import { createPortal } from "react-dom";
-
-import { act, render } from "@testing-library/react";
 
 import { shallow } from "../index";
 
