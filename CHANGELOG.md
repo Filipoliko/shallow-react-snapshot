@@ -1,5 +1,11 @@
 # shallow-react-snapshot
 
+## 0.2.3
+
+### Patch Changes
+
+- 0043692: Updated build dependencies
+
 ## 0.2.2
 
 ### Patch Changes
