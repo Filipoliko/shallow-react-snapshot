@@ -854,3 +854,79 @@ describe("Functional component render", () => {
     expect(result).toMatchSnapshot();
   });
 });
+
+describe("Context", () => {
+  test("react component rendering Context.Provider as root-level child", () => {
+    const MyContext = React.createContext("default");
+
+    function App() {
+      return (
+        <MyContext.Provider value="provided">
+          <MyComponent />
+        </MyContext.Provider>
+      );
+    }
+
+    const { container } = render(<App />);
+
+    const result = shallow(container, App);
+
+    expect(result).toMatchSnapshot();
+  });
+
+  test("react component rendering Context.Provider with displayName as root-level child", () => {
+    const MyContext = React.createContext("default");
+    MyContext.displayName = "MyNamedContext";
+
+    function App() {
+      return (
+        <MyContext.Provider value="provided">
+          <MyComponent />
+        </MyContext.Provider>
+      );
+    }
+
+    const { container } = render(<App />);
+
+    const result = shallow(container, App);
+
+    expect(result).toMatchSnapshot();
+  });
+
+  test("react component rendering Context.Consumer as root-level child", () => {
+    const MyContext = React.createContext("default");
+
+    function App() {
+      return (
+        <MyContext.Consumer>
+          {(value) => <MyComponent>{value}</MyComponent>}
+        </MyContext.Consumer>
+      );
+    }
+
+    const { container } = render(<App />);
+
+    const result = shallow(container, App);
+
+    expect(result).toMatchSnapshot();
+  });
+
+  test("react component rendering Context.Consumer with displayName as root-level child", () => {
+    const MyContext = React.createContext("default");
+    MyContext.displayName = "MyNamedContext";
+
+    function App() {
+      return (
+        <MyContext.Consumer>
+          {(value) => <MyComponent>{value}</MyComponent>}
+        </MyContext.Consumer>
+      );
+    }
+
+    const { container } = render(<App />);
+
+    const result = shallow(container, App);
+
+    expect(result).toMatchSnapshot();
+  });
+});

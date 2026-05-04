@@ -1,5 +1,33 @@
 // Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
 
+exports[`Context react component rendering Context.Consumer as root-level child 1`] = `
+<Context.Consumer>
+  [Function]
+</Context.Consumer>
+`;
+
+exports[`Context react component rendering Context.Consumer with displayName as root-level child 1`] = `
+<MyNamedContext.Consumer>
+  [Function]
+</MyNamedContext.Consumer>
+`;
+
+exports[`Context react component rendering Context.Provider as root-level child 1`] = `
+<Context.Provider
+  value="provided"
+>
+  <MyComponent />
+</Context.Provider>
+`;
+
+exports[`Context react component rendering Context.Provider with displayName as root-level child 1`] = `
+<MyNamedContext.Provider
+  value="provided"
+>
+  <MyComponent />
+</MyNamedContext.Provider>
+`;
+
 exports[`Functional component render HOC component with shallow render of the wrapped component 1`] = `
 <div
   id="MyComponent"

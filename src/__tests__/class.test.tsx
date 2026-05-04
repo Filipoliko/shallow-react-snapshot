@@ -496,3 +496,87 @@ describe("Class component render", () => {
     });
   }
 });
+
+describe("Context", () => {
+  test("class component rendering Context.Provider as root-level child", () => {
+    const MyContext = React.createContext("default");
+
+    class App extends Component {
+      render() {
+        return (
+          <MyContext.Provider value="provided">
+            <MyComponent />
+          </MyContext.Provider>
+        );
+      }
+    }
+
+    const { container } = render(<App />);
+
+    const result = shallow(container, App);
+
+    expect(result).toMatchSnapshot();
+  });
+
+  test("class component rendering Context.Provider with displayName as root-level child", () => {
+    const MyContext = React.createContext("default");
+    MyContext.displayName = "MyNamedContext";
+
+    class App extends Component {
+      render() {
+        return (
+          <MyContext.Provider value="provided">
+            <MyComponent />
+          </MyContext.Provider>
+        );
+      }
+    }
+
+    const { container } = render(<App />);
+
+    const result = shallow(container, App);
+
+    expect(result).toMatchSnapshot();
+  });
+
+  test("class component rendering Context.Consumer as root-level child", () => {
+    const MyContext = React.createContext("default");
+
+    class App extends Component {
+      render() {
+        return (
+          <MyContext.Consumer>
+            {(value) => <MyComponent>{value}</MyComponent>}
+          </MyContext.Consumer>
+        );
+      }
+    }
+
+    const { container } = render(<App />);
+
+    const result = shallow(container, App);
+
+    expect(result).toMatchSnapshot();
+  });
+
+  test("class component rendering Context.Consumer with displayName as root-level child", () => {
+    const MyContext = React.createContext("default");
+    MyContext.displayName = "MyNamedContext";
+
+    class App extends Component {
+      render() {
+        return (
+          <MyContext.Consumer>
+            {(value) => <MyComponent>{value}</MyComponent>}
+          </MyContext.Consumer>
+        );
+      }
+    }
+
+    const { container } = render(<App />);
+
+    const result = shallow(container, App);
+
+    expect(result).toMatchSnapshot();
+  });
+});
