@@ -1,5 +1,11 @@
 # shallow-react-snapshot
 
+## 0.2.4
+
+### Patch Changes
+
+- 750abd1: Add support for `Context.Provider`, `Context.Consumer`, and `Context` (React 19) as rendered components.
+
 ## 0.2.3
 
 ### Patch Changes
