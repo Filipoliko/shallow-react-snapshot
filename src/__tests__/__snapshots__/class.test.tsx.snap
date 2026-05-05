@@ -246,3 +246,31 @@ exports[`Class component render wrapper around react component with single text 
   </MyComponent>
 </div>
 `;
+
+exports[`Context class component rendering Context.Consumer as root-level child 1`] = `
+<Context.Consumer>
+  [Function]
+</Context.Consumer>
+`;
+
+exports[`Context class component rendering Context.Consumer with displayName as root-level child 1`] = `
+<MyNamedContext.Consumer>
+  [Function]
+</MyNamedContext.Consumer>
+`;
+
+exports[`Context class component rendering Context.Provider as root-level child 1`] = `
+<Context.Provider
+  value="provided"
+>
+  <MyComponent />
+</Context.Provider>
+`;
+
+exports[`Context class component rendering Context.Provider with displayName as root-level child 1`] = `
+<MyNamedContext.Provider
+  value="provided"
+>
+  <MyComponent />
+</MyNamedContext.Provider>
+`;

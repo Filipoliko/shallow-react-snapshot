@@ -1,4 +1,7 @@
 import {
+  Context,
+  ContextConsumer,
+  ContextProvider,
   ForwardRef,
   Fragment,
   Memo,
@@ -452,6 +455,35 @@ function getType(instance: ChildrenFiberOrInternalInstance): string {
   // React.Suspense
   if (Suspense && type === Suspense) {
     return "Suspense";
+  }
+
+  // Context.Provider
+  // React 16–18: $$typeof === react.provider; displayName lives on type._context
+  if (ContextProvider && type.$$typeof === ContextProvider) {
+    const contextName = type._context?.displayName ?? "Context";
+    return `${contextName}.Provider`;
+  }
+
+  // Context.Provider
+  // React 19: Provider is the context object itself (no _context back-reference),
+  //           $$typeof === react.context; displayName lives on type itself
+  if (Context && type.$$typeof === Context && !("_context" in type)) {
+    const contextName = type.displayName ?? "Context";
+    return `${contextName}.Provider`;
+  }
+
+  // Context.Consumer (React 19+: $$typeof === react.consumer)
+  // displayName lives on type._context
+  if (ContextConsumer && type.$$typeof === ContextConsumer) {
+    const contextName = type._context?.displayName ?? "Context";
+    return `${contextName}.Consumer`;
+  }
+
+  // Context.Consumer (React 16–18: $$typeof === react.context)
+  // displayName lives on type._context
+  if (Context && type.$$typeof === Context) {
+    const contextName = type._context?.displayName ?? "Context";
+    return `${contextName}.Consumer`;
   }
 
   // Unhandled type, this error hints that we need to add support for a new type
